@@ -17,12 +17,11 @@
 		event.preventDefault()
 		var id = $(this).attr('data-button-id')
 		var request = buttons[id].request
-		debug.write(request)
 		sendSQLRequest(request)
 	})
 
 	function sendSQLRequest(request) {
-		debug.write('Sending request: ', request)
+		debug.write('Sending request: ' + request)
 
 		$.post( "do-sql", { sql: request }, function(data) {
 			debug.write("  Server responded", data)
