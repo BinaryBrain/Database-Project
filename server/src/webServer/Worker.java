@@ -1,17 +1,26 @@
 package webServer;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.net.Socket;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Worker extends Thread {
+	private final static String VIEW_FOLDER = "../client/view";
 	private Socket clientSocket;
 	
 	public Worker(Socket clientSocket) {
@@ -23,14 +32,36 @@ public class Worker extends Thread {
         
         try {
         	InputStream request = clientSocket.getInputStream();
-
+        	
         	ArrayList<String> header = getHeader(request);
         	
-        	getRequestedFile(header.get(0));
+        	URL url = getURL(header.get(0));
         	
-			PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
-			out.println(header);
-			out.close();
+        	String filename = url.getPath();
+        	String parameters = url.getQuery();
+        	
+        	OutputStream res = clientSocket.getOutputStream();
+        	
+        	try {
+	        	File file = new File(VIEW_FOLDER + filename);
+	        	FileInputStream fis = new FileInputStream(file);
+	        	
+	        	byte [] bytearray  = new byte [(int) file.length()];
+	        	BufferedInputStream bis = new BufferedInputStream(fis);
+
+	            int count;
+	            while ((count = bis.read(bytearray)) > 0) {
+	                res.write(bytearray, 0, count);
+	            }
+        	} catch (FileNotFoundException e) {
+        		PrintWriter writer = new PrintWriter(res);
+        		writer.println("Error 404. Page not found.");
+        		System.out.println("Error 404. Page Not found.");
+        		writer.close();
+        	}
+		    
+			res.flush();
+			clientSocket.close();
         	
         	System.out.println("Page sent");
 		} catch (IOException e) {
@@ -39,15 +70,18 @@ public class Worker extends Thread {
 		}
     }
 	
-	public String getRequestedFile(String requestLine) {
+	public URL getURL(String requestLine) throws MalformedURLException {
 		Pattern pattern = Pattern.compile("^.*\\s+(.*)\\s+.*$");
 		Matcher matcher = pattern.matcher(requestLine);
 		
+		URL url = null;
+		
 		if(matcher.find()) {
-			System.out.println(matcher.group(1));
+			String get = matcher.group(1);
+			url = new URL("http://localhost:7123"+get);
 		}
 		
-		return "";
+		return url;
 	}
 	
 	public ArrayList<String> getHeader(InputStream request) throws IOException {
