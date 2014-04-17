@@ -10,6 +10,7 @@ public class Listener {
 	Listener(int port) {
 		try {
 			socket = new ServerSocket(port);
+			System.out.println("Listening on port " + port);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
