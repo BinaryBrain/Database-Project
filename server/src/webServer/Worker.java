@@ -48,15 +48,15 @@ public class Worker extends Thread {
 		}
     }
 	
-	public void sendHeaders(OutputStream res, String mime) {
+	public void sendHeaders(OutputStream res, String mime, String status) {
 		PrintWriter writer = new PrintWriter(res);
 		
-		writer.print("HTTP/1.1 200 OK\r\n");
+		writer.print("HTTP/1.1 "+status+"\r\n");
 		writer.print("Content-Type: "+mime+"\r\n");
 		writer.print("Cache-Control: no-cache"+"\r\n");
 		writer.print("Pragma: no-cache"+"\r\n");
 		
-		writer.print("\r\n\r\n");
+		writer.print("\r\n");
 		
 		writer.flush();
 		//writer.println("Content-Length	3513");
@@ -75,13 +75,15 @@ public class Worker extends Thread {
 	        	byte [] bytearray  = new byte [(int) file.length()];
 	        	BufferedInputStream bis = new BufferedInputStream(fis);
 	        	
-	        	sendHeaders(res, mime);
+	        	sendHeaders(res, mime, "200 OK");
 	        	
 	            int count;
 	            while ((count = bis.read(bytearray)) > 0) {
 	                res.write(bytearray, 0, count);
 	            }
 	    	} catch (FileNotFoundException e) {
+	        	sendHeaders(res, "text/plain", "404 Not Found");
+	        	
 	    		PrintWriter writer = new PrintWriter(res);
 	    		writer.println("Error 404. Page not found.");
 	    		System.out.println("Error 404. ("+path+")");
