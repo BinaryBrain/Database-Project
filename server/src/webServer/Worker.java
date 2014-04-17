@@ -1,21 +1,22 @@
 package webServer;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.Socket;
+import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
+import java.nio.file.WatchEvent.Kind;
+import java.nio.file.WatchEvent.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,35 +41,60 @@ public class Worker extends Thread {
         	String filename = url.getPath();
         	String parameters = url.getQuery();
         	
-        	OutputStream res = clientSocket.getOutputStream();
-        	
-        	try {
-	        	File file = new File(VIEW_FOLDER + filename);
-	        	FileInputStream fis = new FileInputStream(file);
-	        	
-	        	byte [] bytearray  = new byte [(int) file.length()];
-	        	BufferedInputStream bis = new BufferedInputStream(fis);
-
-	            int count;
-	            while ((count = bis.read(bytearray)) > 0) {
-	                res.write(bytearray, 0, count);
-	            }
-        	} catch (FileNotFoundException e) {
-        		PrintWriter writer = new PrintWriter(res);
-        		writer.println("Error 404. Page not found.");
-        		System.out.println("Error 404. Page Not found.");
-        		writer.close();
-        	}
-		    
-			res.flush();
-			clientSocket.close();
-        	
-        	System.out.println("Page sent");
+        	sendResponse(VIEW_FOLDER + filename);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
+	
+	public void sendHeaders(OutputStream res, String mime) {
+		PrintWriter writer = new PrintWriter(res);
+		
+		writer.print("HTTP/1.1 200 OK\r\n");
+		writer.print("Content-Type: "+mime+"\r\n");
+		writer.print("Cache-Control: no-cache"+"\r\n");
+		writer.print("Pragma: no-cache"+"\r\n");
+		
+		writer.print("\r\n\r\n");
+		
+		writer.flush();
+		//writer.println("Content-Length	3513");
+	}
+	
+	public void sendResponse(String path) {
+		try {
+			OutputStream res = clientSocket.getOutputStream();
+	    	
+	    	try {
+	        	File file = new File(path);
+	        	String mime = getMIME(file);
+	        	
+	        	FileInputStream fis = new FileInputStream(file);
+	        	
+	        	byte [] bytearray  = new byte [(int) file.length()];
+	        	BufferedInputStream bis = new BufferedInputStream(fis);
+	        	
+	        	sendHeaders(res, mime);
+	        	
+	            int count;
+	            while ((count = bis.read(bytearray)) > 0) {
+	                res.write(bytearray, 0, count);
+	            }
+	    	} catch (FileNotFoundException e) {
+	    		PrintWriter writer = new PrintWriter(res);
+	    		writer.println("Error 404. Page not found.");
+	    		System.out.println("Error 404. ("+path+")");
+	    		writer.close();
+	    	}
+		    
+			res.flush();
+			clientSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	public URL getURL(String requestLine) throws MalformedURLException {
 		Pattern pattern = Pattern.compile("^.*\\s+(.*)\\s+.*$");
@@ -82,6 +108,10 @@ public class Worker extends Thread {
 		}
 		
 		return url;
+	}
+
+	public String getMIME(File file) {
+		return URLConnection.guessContentTypeFromName(file.getName());
 	}
 	
 	public ArrayList<String> getHeader(InputStream request) throws IOException {
