@@ -29,7 +29,7 @@ public class Worker extends Thread {
 	}
 	
 	public void run() {
-        System.out.println("Worker is running...");
+        System.out.println("Worker #"+Thread.currentThread().getId()+" is running...");
         
         try {
         	InputStream request = clientSocket.getInputStream();
@@ -41,7 +41,7 @@ public class Worker extends Thread {
         	String filename = url.getPath();
         	String parameters = url.getQuery();
         	
-        	sendResponse(VIEW_FOLDER + filename);
+        	sendResponse(filename);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -63,6 +63,12 @@ public class Worker extends Thread {
 	}
 	
 	public void sendResponse(String path) {
+		if(path.equals("/")) {
+			path = "/index.html";
+		}
+		
+		path = VIEW_FOLDER + path;	
+		
 		try {
 			OutputStream res = clientSocket.getOutputStream();
 	    	
