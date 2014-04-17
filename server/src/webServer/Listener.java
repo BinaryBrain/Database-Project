@@ -19,9 +19,10 @@ public class Listener {
 	
 	public void listen() throws IOException {
 		while(true) {
+			// Wait for a client
 			Socket clientSocket = socket.accept();
-			System.out.println("New connection...");
 			
+			// Create a new thread to handle the client
 			Worker worker = new Worker(clientSocket);
 			worker.start();
 		}

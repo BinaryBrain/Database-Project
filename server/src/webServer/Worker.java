@@ -3,20 +3,10 @@ package webServer;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.Socket;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
-import java.nio.file.WatchEvent.Kind;
-import java.nio.file.WatchEvent.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,7 +38,7 @@ public class Worker extends Thread {
 		}
     }
 	
-	public void sendHeaders(OutputStream res, String mime, String status) {
+	private void sendHeaders(OutputStream res, String mime, String status) {
 		PrintWriter writer = new PrintWriter(res);
 		
 		writer.print("HTTP/1.1 "+status+"\r\n");
@@ -56,15 +46,18 @@ public class Worker extends Thread {
 		writer.print("Cache-Control: no-cache"+"\r\n");
 		writer.print("Pragma: no-cache"+"\r\n");
 		
-		writer.print("\r\n");
+		writer.print("\r\n"); // DO NOT REMOVE THIS LINE
 		
 		writer.flush();
-		//writer.println("Content-Length	3513");
 	}
 	
-	public void sendResponse(String path) {
+	private void sendResponse(String path) {
+		// Handleing different behavior
 		if(path.equals("/")) {
 			path = "/index.html";
+		}
+		if(path.equals("/do-sql")) {
+			// TODO Handle do-sql
 		}
 		
 		path = VIEW_FOLDER + path;	
@@ -81,13 +74,16 @@ public class Worker extends Thread {
 	        	byte [] bytearray  = new byte [(int) file.length()];
 	        	BufferedInputStream bis = new BufferedInputStream(fis);
 	        	
+	        	// sending HTTP headers
 	        	sendHeaders(res, mime, "200 OK");
 	        	
+	        	// Sending file
 	            int count;
 	            while ((count = bis.read(bytearray)) > 0) {
 	                res.write(bytearray, 0, count);
 	            }
 	    	} catch (FileNotFoundException e) {
+	    		// Error 404: Page not Found
 	        	sendHeaders(res, "text/plain", "404 Not Found");
 	        	
 	    		PrintWriter writer = new PrintWriter(res);
@@ -104,7 +100,8 @@ public class Worker extends Thread {
 		}
 	}
 	
-	public URL getURL(String requestLine) throws MalformedURLException {
+	// Extract path and parameters from HTTP header
+	private URL getURL(String requestLine) throws MalformedURLException {
 		Pattern pattern = Pattern.compile("^.*\\s+(.*)\\s+.*$");
 		Matcher matcher = pattern.matcher(requestLine);
 		
@@ -118,11 +115,12 @@ public class Worker extends Thread {
 		return url;
 	}
 
-	public String getMIME(File file) {
+	private String getMIME(File file) {
 		return URLConnection.guessContentTypeFromName(file.getName());
 	}
 	
-	public ArrayList<String> getHeader(InputStream request) throws IOException {
+	// Get HTTP Header from Client
+	private ArrayList<String> getHeader(InputStream request) throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(request));
 		
 		int input;
