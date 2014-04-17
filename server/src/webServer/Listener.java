@@ -10,7 +10,7 @@ public class Listener {
 	Listener(int port) {
 		try {
 			socket = new ServerSocket(port);
-			System.out.println("Listening on port " + port);
+			System.out.println("Listening on port " + port + " (try http://localhost:" + port + "/)");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -20,7 +20,7 @@ public class Listener {
 	public void listen() throws IOException {
 		while(true) {
 			Socket clientSocket = socket.accept();
-			System.out.println("New connection!");
+			System.out.println("New connection...");
 			
 			Worker worker = new Worker(clientSocket);
 			worker.start();
