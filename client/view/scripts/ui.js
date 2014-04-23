@@ -23,7 +23,7 @@
 	function sendSQLRequest(request) {
 		debug.write('Sending request: ' + request)
 
-		$.post( "do-sql", { sql: request }, function(data) {
+		$.get( "do-sql", { sql: request }, function(data) {
 			debug.write("  Server responded", data)
 		});
 	}
