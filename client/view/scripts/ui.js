@@ -24,7 +24,7 @@
 		debug.write('Sending request: ' + request)
 
 		$.get( "do-sql", { sql: request }, function(data) {
-			debug.write("  Server responded", data)
+			debug.write("  Server responded" + data)
 		});
 	}
 
