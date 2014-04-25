@@ -20,6 +20,13 @@
 		sendSQLRequest(request)
 	})
 
+	$("#search-form").submit(function (event) {
+		event.preventDefault()
+		var keyword = $("#search-input").val()
+		var sqlReq = "SELECT * FROM artist WHERE name='" + keyword + "'" // TODO Much complex request
+		sendSQLRequest(sqlReq)
+	})
+
 	function sendSQLRequest(request) {
 		debug.write('Sending request: ' + request)
 
@@ -30,7 +37,6 @@
 			}
 		});
 	}
-
 
 	function renderTable(data) {
 		// Handling empty tables
