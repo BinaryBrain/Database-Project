@@ -13,7 +13,7 @@ PRIMARY KEY(ID_Genre));
 
 CREATE TABLE Recording
 (ID_Recording INT,
-Name VARCHAR2(1000),
+Name VARCHAR2(2000),
 Length INT,
 PRIMARY KEY(ID_Recording));
 
