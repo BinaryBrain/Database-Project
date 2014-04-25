@@ -6,12 +6,16 @@ import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.sql.SQLException;
+import java.sql.SQLRecoverableException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import database.Database;
 
 public class Worker extends Thread {
 	private final static String VIEW_FOLDER = "../client/view";
@@ -31,11 +35,15 @@ public class Worker extends Thread {
         	
         	URL url = getURL(header.get(0));
         	
-        	String filename = url.getPath();
-        	Map<String, String> parameters = getParameters(url);
-        	
-        	
-        	sendResponse(filename, parameters);
+        	if(url != null) {
+	        	String filename = url.getPath();
+	        	Map<String, String> parameters = getParameters(url);
+	        	
+	        	
+	        	sendResponse(filename, parameters);
+        	} else {
+        		System.out.println("ERROR: URL is null.");
+        	}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -85,22 +93,42 @@ public class Worker extends Thread {
 			if(path.equals("/do-sql")) {
 				// TODO Sanitize and Execute SQL request 
 				String sql = parameters.get("sql");
-				System.out.println(sql);
-				String json = "{"+
-						"\"status\": \"OK\","+
-						"\"data\": ["+
-				 		"{ \"name\": \"Change\", \"artist\": \"Flume\", \"album\": \"Flume\", \"length\": \"2\\\"30'\" },"+
-				 		"{ \"name\": \"Belispeak\", \"artist\": \"Purity Ring\", \"album\": \"Shrines\", \"length\": \"2\\\"59'\" },"+
-				 		"{ \"name\": \"When I'm Small\", \"artist\": \"Phantogram\", \"album\": \"Eyelid Movies\", \"length\": \"4\\\"11'\" },"+
-				 		"{ \"name\": \"More Than You (Unplugged Version)\", \"artist\": \"Koven\", \"length\": \"3\\\"54'\" },"+
-				 		"{ \"name\": \"test\", \"artist\": \"<h1>lol</h1>, ', \\\\, \\\\n, &amp;\", \"length\": \"0\" }"+
-				 	"]}"; // TODO json = DB response
+				System.out.println("Executing: " + sql);
 				
-				sendHeaders(res, "application/json", "200 OK");
+				try {
+					Database db = Database.getInstance();
+					db.executeQuery(sql);
 				
-				PrintWriter writer = new PrintWriter(res);
-	    		writer.println(json);
-	    		writer.close();
+					String json = "{"+
+							"\"status\": \"OK\","+
+							"\"data\": ["+
+					 		"{ \"name\": \"Change\", \"artist\": \"Flume\", \"album\": \"Flume\", \"length\": \"2\\\"30'\" },"+
+					 		"{ \"name\": \"Belispeak\", \"artist\": \"Purity Ring\", \"album\": \"Shrines\", \"length\": \"2\\\"59'\" },"+
+					 		"{ \"name\": \"When I'm Small\", \"artist\": \"Phantogram\", \"album\": \"Eyelid Movies\", \"length\": \"4\\\"11'\" },"+
+					 		"{ \"name\": \"More Than You (Unplugged Version)\", \"artist\": \"Koven\", \"length\": \"3\\\"54'\" },"+
+					 		"{ \"name\": \"test\", \"artist\": \"<h1>lol</h1>, ', \\\\, \\\\n, &amp;\", \"length\": \"0\" }"+
+					 	"]}"; // TODO json = DB response
+					
+					sendHeaders(res, "application/json", "200 OK");
+					
+					PrintWriter writer = new PrintWriter(res);
+		    		writer.println(json);
+		    		writer.close();
+				} catch (Exception e) {
+					Throwable cause;
+					while((cause = e.getCause()) != null) {
+						e = (Exception) cause;
+					}
+					
+					String errorMessage = "Database Error: "+e.getMessage();
+					sendHeaders(res, "text/plain", "500 Internal Server Error");
+					
+					PrintWriter writer = new PrintWriter(res);
+		    		writer.println(errorMessage);
+		    		writer.close();
+		    		
+		    		e.printStackTrace();
+				}
 			} else {
 				path = VIEW_FOLDER + path;	
 	
