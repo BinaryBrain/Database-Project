@@ -64,6 +64,7 @@ public class Database {
 					}
 				}
 			}
+			
 			// STEP 6: Clean-up environment
 			rs.close();
 			stmt.close();

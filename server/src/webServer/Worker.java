@@ -86,11 +86,14 @@ public class Worker extends Thread {
 				// TODO Sanitize and Execute SQL request 
 				String sql = parameters.get("sql");
 				System.out.println(sql);
-				String json = "{\"data\": ["+
+				String json = "{"+
+						"\"status\": \"OK\","+
+						"\"data\": ["+
 				 		"{ \"name\": \"Change\", \"artist\": \"Flume\", \"album\": \"Flume\", \"length\": \"2\\\"30'\" },"+
 				 		"{ \"name\": \"Belispeak\", \"artist\": \"Purity Ring\", \"album\": \"Shrines\", \"length\": \"2\\\"59'\" },"+
 				 		"{ \"name\": \"When I'm Small\", \"artist\": \"Phantogram\", \"album\": \"Eyelid Movies\", \"length\": \"4\\\"11'\" },"+
-				 		"{ \"name\": \"More Than You (Unplugged Version)\", \"artist\": \"Koven\", \"length\": \"3\\\"54'\" }"+
+				 		"{ \"name\": \"More Than You (Unplugged Version)\", \"artist\": \"Koven\", \"length\": \"3\\\"54'\" },"+
+				 		"{ \"name\": \"test\", \"artist\": \"<h1>lol</h1>, ', \\\\, \\\\n, &amp;\", \"length\": \"0\" }"+
 				 	"]}"; // TODO json = DB response
 				
 				sendHeaders(res, "application/json", "200 OK");
