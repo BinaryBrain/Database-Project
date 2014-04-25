@@ -67,3 +67,4 @@ WHERE  (SELECT Count(T.ID)
 															FROM Release R1, Medium M1, Track T1
 															WHERE R1.ID<> R.ID AND M1.ID= T1.ID_MEDIUM AND R1.ID=M1.ID_RELEASE)
 																
+
