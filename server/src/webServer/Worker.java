@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.sql.SQLRecoverableException;
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class Worker extends Thread {
 	}
 	
 	private void sendHeaders(OutputStream res, String mime, String status) {
-		PrintWriter writer = new PrintWriter(res);
+		PrintWriter writer = new PrintWriter(new OutputStreamWriter(res, StandardCharsets.UTF_8), true);
 		
 		writer.print("HTTP/1.1 "+status+"\r\n");
 		writer.print("Content-Type: "+mime+"\r\n");
@@ -102,7 +103,7 @@ public class Worker extends Thread {
 					String json = db.executeQuery(sql);
 					sendHeaders(res, "application/json", "200 OK");
 					
-					PrintWriter writer = new PrintWriter(res);
+					PrintWriter writer = new PrintWriter(new OutputStreamWriter(res, StandardCharsets.UTF_8), true);
 		    		writer.println(json);
 		    		writer.close();
 				} catch (Exception e) {
@@ -114,7 +115,7 @@ public class Worker extends Thread {
 					String errorMessage = "Database Error: "+e.getMessage();
 					sendHeaders(res, "text/plain", "500 Internal Server Error");
 					
-					PrintWriter writer = new PrintWriter(res);
+					PrintWriter writer = new PrintWriter(new OutputStreamWriter(res, StandardCharsets.UTF_8), true);
 		    		writer.println(errorMessage);
 		    		writer.close();
 		    		
@@ -144,7 +145,7 @@ public class Worker extends Thread {
 		    		// Error 404: Page not Found
 		        	sendHeaders(res, "text/plain", "404 Not Found");
 		        	
-		    		PrintWriter writer = new PrintWriter(res);
+		    		PrintWriter writer = new PrintWriter(new OutputStreamWriter(res, StandardCharsets.UTF_8), true);
 		    		writer.println("Error 404. Page not found.");
 		    		System.out.println("Error 404. ("+path+")");
 		    		writer.close();

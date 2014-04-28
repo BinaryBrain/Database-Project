@@ -23,7 +23,7 @@
 	$("#search-form").submit(function (event) {
 		event.preventDefault()
 		var keyword = $("#search-input").val()
-		var sqlReq = "SELECT * FROM artist WHERE name='" + keyword + "'" // TODO Much complex request
+		var sqlReq = "SELECT * FROM artist WHERE name LIKE '%" + keyword + "%'" // TODO Much complex request
 		sendSQLRequest(sqlReq)
 	})
 
