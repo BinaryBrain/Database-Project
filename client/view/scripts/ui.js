@@ -6,6 +6,67 @@
 		{ name: "Get All Songs from The xx", request: "SELECT * FROM song INNER JOIN artist ON song.artist_id = artist.artist_id WHERE artist.name = 'The xx'"},
 	]
 
+	var structure = [
+		{
+			name: "area", columns: [
+				{ name: 'ID_AREA', search: false },
+				{ name: 'NAME', search: true },
+				{ name: 'TYPE', search: false }
+			]
+		},
+		{
+			name: "artist", columns: [
+				{ name: 'ID_ARTIST', search: false },
+				{ name: 'NAME', search: true },
+				{ name: 'TYPE', search: false },
+				{ name: 'GENDER', search: false },
+				{ name: 'ID_AREA', search: false }
+			]
+		},
+		{
+			name: "artist_genre", columns: [
+				{ name: 'ID_ARTIST', search: false },
+				{ name: 'ID_GENRE', search: false }
+			]
+		},
+		{
+			name: "gendre", columns: [
+				{ name: 'ID_GENRE', search: false },
+				{ name: 'NAME', search: true },
+				{ name: 'COUNT', search: false }
+			]
+		},
+		{
+			name: "medium", columns: [
+				{ name: 'ID_MEDIUM', search: false },
+				{ name: 'FORMAT', search: false },
+				{ name: 'ID_RELEASE', search: false }
+			]
+		},
+		{
+			name: "recording", columns: [
+				{ name: 'ID_RECORDING', search: false },
+				{ name: 'NAME', search: true },
+				{ name: 'LENGTH', search: false }
+			]
+		},
+		{
+			name: "release", columns: [
+				{ name: 'ID_RELEASE', search: false },
+				{ name: 'NAME', search: true }
+			]
+		},
+		{
+			name: "track", columns: [
+				{ name: 'ID_TRACK', search: false },
+				{ name: 'POSITION', search: FALSE },
+				{ name: 'ID_MEDIUM', search: false },
+				{ name: 'ID_RECORDING', search: false }
+			]
+		},
+		
+	]
+
 	var html = ''
 	for(var i = 0, l = buttons.length; i < l; i++) {
 		html += '<a href="#" class="list-group-item sql-button" data-button-id="'+i+'">'+buttons[i].name+'</a>'
