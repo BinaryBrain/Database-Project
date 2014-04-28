@@ -44,7 +44,6 @@ Position INT,
 ID_Medium INT,
 ID_Recording INT,
 PRIMARY KEY(ID_Track),
-FOREIGN KEY(ID_Medium) REFERENCES Medium,
 FOREIGN KEY(ID_Recording) REFERENCES Recording
 );
 
