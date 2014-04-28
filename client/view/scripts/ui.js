@@ -34,6 +34,8 @@
 			debug.write("  Server responded " + res.status)
 			if(res.status === "OK") {
 				renderTable(res.data)
+			} else if (res.status === "Error") {
+				debug.write(res.error)
 			}
 		});
 	}

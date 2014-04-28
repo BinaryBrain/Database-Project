@@ -56,12 +56,13 @@ public class Worker extends Thread {
 	    Map<String, String> map = new HashMap<String, String>();
 	    
 		if(query != null) {
-			query = URLDecoder.decode(query, "UTF-8" );
+		    System.out.println(query);
+
 		    String[] params = query.split("&");
 		    
 		    for (String param : params) {
-		        String name = param.split("=")[0];
-		        String value = param.split("=")[1];
+		        String name = URLDecoder.decode(param.split("=")[0], "UTF-8" );
+		        String value = URLDecoder.decode(param.split("=")[1], "UTF-8" );
 		        map.put(name, value);  
 		    }
 		}
@@ -97,18 +98,8 @@ public class Worker extends Thread {
 				
 				try {
 					Database db = Database.getInstance();
-					db.executeQuery(sql);
-				
-					String json = "{"+
-							"\"status\": \"OK\","+
-							"\"data\": ["+
-					 		"{ \"name\": \"Change\", \"artist\": \"Flume\", \"album\": \"Flume\", \"length\": \"2\\\"30'\" },"+
-					 		"{ \"name\": \"Belispeak\", \"artist\": \"Purity Ring\", \"album\": \"Shrines\", \"length\": \"2\\\"59'\" },"+
-					 		"{ \"name\": \"When I'm Small\", \"artist\": \"Phantogram\", \"album\": \"Eyelid Movies\", \"length\": \"4\\\"11'\" },"+
-					 		"{ \"name\": \"More Than You (Unplugged Version)\", \"artist\": \"Koven\", \"length\": \"3\\\"54'\" },"+
-					 		"{ \"name\": \"test\", \"artist\": \"<h1>lol</h1>, ', \\\\, \\\\n, &amp;\", \"length\": \"0\" }"+
-					 	"]}"; // TODO json = DB response
 					
+					String json = db.executeQuery(sql);
 					sendHeaders(res, "application/json", "200 OK");
 					
 					PrintWriter writer = new PrintWriter(res);
@@ -184,7 +175,22 @@ public class Worker extends Thread {
 	}
 
 	private String getMIME(File file) {
-		return URLConnection.guessContentTypeFromName(file.getName());
+		String filename = file.getName();
+		String mime = URLConnection.guessContentTypeFromName(filename);
+		
+		if(filename.contains(".")) {
+			String ext = filename.substring(filename.lastIndexOf('.')+1);
+			
+			if(ext.equals("css")) {
+				mime = "text/css";
+			}
+		}
+		
+		if(mime == null) {
+			mime = "text/plain";
+		}
+		
+		return mime;
 	}
 	
 	// Get HTTP Header from Client
