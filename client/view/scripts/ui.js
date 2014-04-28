@@ -63,8 +63,7 @@
 				{ name: 'ID_MEDIUM', search: false },
 				{ name: 'ID_RECORDING', search: false }
 			]
-		},
-		
+		}		
 	]
 
 	var html = ''
