@@ -120,10 +120,9 @@ public class Database {
 			json += "]";
 			
 			System.out.println("Done.");
-	
+			
 			rs.close();
 			stmt.close();
-
 		} catch (SQLSyntaxErrorException e) {
 			json += "\"status\": \"Error\","+"\"error\": \""+e.getMessage().trim()+"\"";
 		} finally {

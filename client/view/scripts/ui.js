@@ -6,6 +6,14 @@
 		{ name: "Get All Songs from The xx", request: "SELECT * FROM song INNER JOIN artist ON song.artist_id = artist.artist_id WHERE artist.name = 'The xx'"},
 	]
 
+	var searchTable = [
+		'area', 
+		'artist',
+		'genre',
+		'recording',
+		'release'
+	]
+
 	var structure = [
 		{
 			name: "area", columns: [
@@ -30,7 +38,7 @@
 			]
 		},
 		{
-			name: "gendre", columns: [
+			name: "genre", columns: [
 				{ name: 'ID_GENRE', search: false },
 				{ name: 'NAME', search: true },
 				{ name: 'COUNT', search: false }
@@ -59,12 +67,14 @@
 		{
 			name: "track", columns: [
 				{ name: 'ID_TRACK', search: false },
-				{ name: 'POSITION', search: FALSE },
+				{ name: 'POSITION', search: false },
 				{ name: 'ID_MEDIUM', search: false },
 				{ name: 'ID_RECORDING', search: false }
 			]
 		}		
 	]
+
+	populateSelect(searchTable)
 
 	var html = ''
 	for(var i = 0, l = buttons.length; i < l; i++) {
@@ -83,7 +93,8 @@
 	$("#search-form").submit(function (event) {
 		event.preventDefault()
 		var keyword = $("#search-input").val()
-		var sqlReq = "SELECT * FROM artist WHERE name LIKE '%" + keyword + "%'" // TODO Much complex request
+		var table = $('#form-table-select').val()
+		var sqlReq = "SELECT * FROM "+table+" WHERE name LIKE '%" + keyword + "%'" // TODO Much complex request
 		sendSQLRequest(sqlReq)
 	})
 
@@ -161,5 +172,18 @@
 		clean: function () {
 			$("#debug").html('')
 		}
+	}
+
+	function populateSelect(searchTables) {
+		var html = ''
+		for (var i = 0, l = searchTables.length; i < l; i++) {
+			html += '<option value="'+searchTables[i]+'">'+firstCap(searchTables[i])+'</option>'
+		}
+
+		$("#form-table-select").html(html)
+	}
+
+	function firstCap(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 	}
 })()
