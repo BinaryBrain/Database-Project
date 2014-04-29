@@ -58,5 +58,4 @@ CREATE TABLE Artist_Track
 (ID_Artist INT,
 ID_Track INT,
 PRIMARY KEY(ID_Artist, ID_Track),
-FOREIGN KEY(ID_Artist) REFERENCES Artist,
-FOREIGN KEY(ID_Track) REFERENCES Track);
+FOREIGN KEY(ID_Artist) REFERENCES Artist);
