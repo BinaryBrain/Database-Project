@@ -17,7 +17,7 @@ Server Response (JSON)
 	"status": "OK",
 	"data": [
 		{ "ID_ARTIST": "1", "NAME": "The xx" },
-		{ "ID_ARTIST": "2", "NAME": "Camillia Sparksss", "AREA": "Switzerland" }
+		{ "ID_ARTIST": "2", "NAME": "Camilla Sparksss", "AREA": "Switzerland" }
 	]
 }
 ```
