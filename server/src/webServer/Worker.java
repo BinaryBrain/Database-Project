@@ -27,7 +27,7 @@ public class Worker extends Thread {
 	}
 	
 	public void run() {
-        System.out.println("Worker #"+Thread.currentThread().getId()+" is running...");
+        //System.out.println("Worker #"+Thread.currentThread().getId()+" is running...");
         
         try {
         	InputStream request = clientSocket.getInputStream();
@@ -39,7 +39,6 @@ public class Worker extends Thread {
         	if(url != null) {
 	        	String filename = url.getPath();
 	        	Map<String, String> parameters = getParameters(url);
-	        	
 	        	
 	        	sendResponse(filename, parameters);
         	} else {

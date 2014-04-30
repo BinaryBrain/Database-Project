@@ -37,8 +37,7 @@ public class Database {
 			System.out.println("Connecting to database...");
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.getMessage(); // TODO send to client
 		}
 	}
 	
@@ -102,10 +101,10 @@ public class Database {
 					try {
 						if (Class.forName(type).equals(BigDecimal.class)) {
 							int value = rs.getInt(colName);
-							json += "\""+colName+"\": "+value;
+							json += "\""+s(colName)+"\": "+value;
 						} else if (Class.forName(type).equals(String.class)) {
 							String value = rs.getString(colName);
-							json += "\""+colName+"\": \""+value+"\"";
+							json += "\""+s(colName)+"\": \""+s(value)+"\"";
 							//System.out.println(key + " (String): " + str);
 						}
 					} catch (ClassNotFoundException e) {
@@ -124,11 +123,15 @@ public class Database {
 			rs.close();
 			stmt.close();
 		} catch (SQLSyntaxErrorException e) {
-			json += "\"status\": \"Error\","+"\"error\": \""+e.getMessage().trim()+"\"";
+			json += "\"status\": \"Error\","+"\"error\": \""+s(e.getMessage().trim())+"\"";
 		} finally {
 			json += "}";
-			System.out.println(json);
+			
 			return json;
 		}
+	}
+	
+	public String s(String str) {
+		return str.replaceAll("\"","\\\\\"");
 	}
 }

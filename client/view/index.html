@@ -32,7 +32,7 @@
 				<form class="form-inline" role="form" id="search-form">
 					<div class="form-group">
 					    <label for="search-input" class="sr-only">Search</label>
-				      	<input type="text" class="form-control" id="search-input" placeholder="Keyword">
+				      	<input type="text" class="form-control" id="search-input" placeholder="Keyword" required>
 					</div>
 					in
 					<div class="form-group">
@@ -42,7 +42,10 @@
 					<button type="submit" class="btn btn-primary">Search <span class="glyphicon glyphicon-search"></span></button>
 				</form>
 				<h3>Output</h3>
-				<div id="output">
+				<ul id="tabs" class="nav nav-tabs nav-justified">
+				</ul>
+				<img id="ajax-loader" src="ajax-loader.gif" alt="Please wait...">
+				<div id="output" class="tab-content">
 					<span class="data-empty">The table is empty. There is no result to show.</span>
 				</div>
 
