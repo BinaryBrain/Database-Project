@@ -211,26 +211,24 @@
 		html += "</tr>"
 
 		for(var i = 0, l = data.length; i < l; i++) {
-			html += "<tr>"
+			if(tableName) {
+				var idCol = "ID_"+tableName.toUpperCase()
+
+				html += '<tr class="result-links" href="#" data-table="'+tableName+'" data-id-col="'+idCol+'" data-id="'+data[i][idCol]+'">'
+			} else {
+				html += "<tr>"
+			}
 
 			for(var j = 0, k = columns.length; j < k; j++) {
-				// TODO data-table
-				if(tableName) {
-					var idCol = "ID_"+tableName.toUpperCase()
-					if(columns[j].toLowerCase() !== idCol.toLowerCase()) {
-						html += "<td>"
-						html += '<a class="result-links" href="#" data-table="'+tableName+'" data-id-col="'+idCol+'" data-id="'+data[i][idCol]+'">'
-						html += htmlEntities(data[i][columns[j]])
-						html += '</a>'
-						html += "</td>"
-					}
-				} else {
+				if(tableName && columns[j].toLowerCase() !== idCol.toLowerCase()) {
 					html += "<td>"
+
 					if(data[i][columns[j]]) {
 						html += htmlEntities(data[i][columns[j]])
 					} else {
 						html += '<span class="data-null">null</span>'
 					}
+					
 					html += "</td>"
 				}
 			}
