@@ -41,7 +41,7 @@ public class Database {
 		}
 	}
 	
-	public static Database getInstance() throws SQLException {
+	public synchronized static Database getInstance() throws SQLException {
 		if(instance == null) {
 		   instance = new Database();
 		}
@@ -50,7 +50,7 @@ public class Database {
 	
 	// TODO Return stuff
 	@SuppressWarnings("finally")
-	public String executeQuery(String sqlQuery) throws SQLException {
+	public synchronized String executeQuery(String sqlQuery) throws SQLException {
 		System.out.println("Executing: "+sqlQuery);
 		stmt = conn.createStatement();
 		String sql;
