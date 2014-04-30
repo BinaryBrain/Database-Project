@@ -146,6 +146,16 @@
 		$(this).tab('show')
 	})
 
+	$("#fullscreen-button").click(function (e) {
+		e.preventDefault()
+		toFullscreen("#output")
+	})
+
+	$("#fullscreen-close").click(function (e) {
+		e.preventDefault()
+		closeFullscreen()
+	})
+
 	function sendSQLRequest(request, cb) {
 		var cbArgs = Array.prototype.slice.call(arguments)
 		cbArgs.splice(0, 2)
@@ -294,5 +304,14 @@
 
 	function hideAjaxLoader() {
 		$("#ajax-loader").hide()
+	}
+
+	function toFullscreen(div) {
+		$("#fullscreen-content").html($(div).html());
+		$("#fullscreen").fadeIn()
+	}
+
+	function closeFullscreen() {
+		$("#fullscreen").fadeOut()
 	}
 })()
