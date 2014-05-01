@@ -123,6 +123,20 @@
 			requests['area'] = "SELECT area.NAME, area.ID_AREA, area.TYPE FROM area, artist WHERE area.ID_AREA=artist.ID_AREA AND artist."+idCol+"='"+id+"'"
 			requests['genre'] = "SELECT g.NAME, g.ID_GENRE, g.COUNT FROM artist_genre x, genre g WHERE g.ID_GENRE = x.ID_GENRE AND x."+idCol+"='"+id+"'"
 			requests['release'] = "SELECT r.NAME, r.ID_RELEASE FROM artist a, release r, medium m, track t, artist_track s WHERE s.ID_ARTIST = a.ID_ARTIST AND s.ID_TRACK = t.ID_TRACK AND t.ID_MEDIUM = m.ID_MEDIUM AND m.ID_RELEASE = r.ID_RELEASE AND a."+idCol+"='"+id+"'"
+		} else if (table === 'area') {
+			tables = ['artist']
+			requests['artist'] = "SELECT a.NAME, a.ID_ARTIST, a.GENDER, a.ID_AREA, a.TYPE FROM artist a WHERE a.ID_AREA = "+id
+		}  else if (table === 'genre') {
+			tables = ['artist']
+			requests['artist'] = "SELECT a.NAME, a.ID_ARTIST, a.GENDER, a.ID_AREA, a.TYPE FROM artist a, artist_genre g WHERE a.ID_ARTIST = g.ID_ARTIST AND g.ID_GENRE = "+id
+		}  else if (table === 'recording') {
+			tables = ['artist', 'release']
+			requests['artist'] = "SELECT a.NAME, a.ID_ARTIST, a.GENDER, a.ID_AREA, a.TYPE FROM artist a, track t, artist_track x WHERE x.ID_TRACK = t.ID_TRACK AND x.ID_ARTIST = a.ID_ARTIST AND t.ID_RECORDING = "+id
+			requests['release'] = "SELECT r.NAME, r.ID_RELEASE FROM track t, medium m, release r WHERE t.ID_MEDIUM = m.ID_MEDIUM AND m.ID_RELEASE = r.ID_RELEASE AND t.ID_RECORDING = "+id
+		}  else if (table === 'relase') {
+			tables = ['artist', 'recording']
+			requests['artist'] = "SELECT a.NAME, a.ID_ARTIST, a.GENDER, a.ID_AREA, a.TYPE FROM artist a, medium m, track t, artist_track x WHERE t.ID_MEDIUM = m.ID_MEDIUM AND x.ID_TRACK = t.ID_TRACK AND x.ID_ARTIST = a.ID_ARTIST AND m.ID_RELEASE = "+id
+			requests['recording'] = "SELECT r.NAME, r.ID_RECORDING, r.LENGTH FROM medium m, track t, recording r WHERE t.ID_MEDIUM = m.ID_MEDIUM AND t.ID_RECORDING = r.ID_RECORDING AND m.ID_RELEASE = "+id
 		} else {
 			return
 		}
