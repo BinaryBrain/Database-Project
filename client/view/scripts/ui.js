@@ -99,7 +99,7 @@
 		event.preventDefault()
 		var keyword = $("#search-input").val()
 		var table = $('#form-table-select').val()
-		var sqlReq = "SELECT * FROM "+table+" WHERE name LIKE '%" + keyword + "%'" // TODO Much complex request
+		var sqlReq = "SELECT * FROM "+table+" WHERE LOWER(name) LIKE lower('%" + keyword + "%')" // TODO Much complex request
 		
 		destroyTabs()
 
