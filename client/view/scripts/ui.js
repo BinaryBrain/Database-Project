@@ -121,8 +121,8 @@
 
 	$("#search-form").submit(function (event) {
 		event.preventDefault()
-		var keyword = $("#search-input").val()
-		var table = $('#form-table-select').val()
+		var keyword = s($("#search-input").val())
+		var table = s($('#form-table-select').val())
 		var sqlReq = "SELECT * FROM "+table+" WHERE LOWER(name) LIKE lower('%" + keyword + "%')" // TODO Much complex request
 		
 		destroyTabs()
@@ -134,9 +134,9 @@
 
 	$("#output").on('click', '.result-links', function (event) {
 		event.preventDefault()
-		var table = $(this).attr("data-table")
-		var idCol = $(this).attr("data-id-col")
-		var id = $(this).attr("data-id")
+		var table = s($(this).attr("data-table"))
+		var idCol = s($(this).attr("data-id-col"))
+		var id = s($(this).attr("data-id"))
 
 		destroyTabs()
 
@@ -349,5 +349,29 @@
 
 	function closeFullscreen() {
 		$("#fullscreen").fadeOut()
+	}
+
+	function s(str) {
+		return str.replace(/[\0\x08\x09\x1a\n\r"'\\\%]/g, function (char) {
+		switch (char) {
+			case "\0":
+				return "\\0";
+			case "\x08":
+				return "\\b";
+			case "\x09":
+				return "\\t";
+			case "\x1a":
+				return "\\z";
+			case "\n":
+				return "\\n";
+			case "\r":
+				return "\\r";
+			case '"':
+			case "'":
+			case "\\":
+			case "%":
+				return "\\"+char;
+		}
+	});
 	}
 })()
