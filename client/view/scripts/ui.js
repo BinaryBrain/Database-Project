@@ -258,7 +258,7 @@
 			}
 
 			for(var j = 0, k = columns.length; j < k; j++) {
-				if(tableName && columns[j].toLowerCase() !== idCol.toLowerCase()) {
+				if(!tableName || columns[j].toLowerCase() !== idCol.toLowerCase()) {
 					html += "<td>"
 
 					if(data[i][columns[j]]) {
