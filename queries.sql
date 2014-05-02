@@ -63,7 +63,7 @@ WHERE B.type='City' AND (SELECT Count(*)
 					  FROM Artist A1
 					  WHERE A1.gender='Male' 
   AND A1.ID_AREA=B.ID_AREA)
-					FROM Artist A1
+
 																		WHERE A1.gender='male' AND A1.ID_AREA=B.ID_AREA )
 --G List the release with the most number of tracks
 SELECT NAME
