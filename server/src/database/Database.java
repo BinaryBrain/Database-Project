@@ -123,6 +123,7 @@ public class Database {
 			rs.close();
 			stmt.close();
 		} catch (SQLSyntaxErrorException e) {
+			System.out.println(e.getMessage());
 			json += "\"status\": \"Error\","+"\"error\": \""+s(e.getMessage().trim())+"\"";
 		} finally {
 			json += "}";

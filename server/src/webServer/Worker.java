@@ -56,8 +56,6 @@ public class Worker extends Thread {
 	    Map<String, String> map = new HashMap<String, String>();
 	    
 		if(query != null) {
-		    System.out.println(query);
-
 		    String[] params = query.split("&");
 		    
 		    for (String param : params) {
