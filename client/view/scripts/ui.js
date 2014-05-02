@@ -6,27 +6,27 @@
 			name: "a) Artist from Switzerland", request: "SELECT A.name FROM Artist A, Area B WHERE A.ID_AREA = B.ID_AREA AND B.name= 'Switzerland'"
 		},
 		{
-			name: "b) ???", request: ""
+			name: "b) ?Area with the highest number of female, male and group artist", request: ""
 		},
 		{
 			name: "c) 10 groups with the most recorded track",
-			request: "SELECT * FROM(SELECT A.name FROM Artist A, Artist_Track S WHERE A.ID_ARTIST=S.ID_ARTIST AND A.gender='group' GROUP BY A.ID_ARTIST ORDER BY count(S.ID_TRACK) DESC) WHERE ROWNUM <=10"
+			request: "SELECT * FROM(SELECT A.NAME FROM  DUMMY_Artist A, DUMMY_Artist_Track S WHERE A.ID_ARTIST=S.ID_ARTIST AND A.TYPE='Group' GROUP BY A.NAME ORDER BY count(S.ID_TRACK) DESC)WHERE ROWNUM <=10"
 		},
 		{
 			name: "d) 10 groups with the most release",
-			request: "SELECT * FROM(SELECT A.name FROM Artist A, Track T, Artist_Track S, Medium M, Release R WHERE A.ID_ARTIST =S.ID_ARTIST AND T.ID_TRACK=S.ID_TRACK AND T.ID_MEDIUM=M.ID_MEDIUM AND R.ID_RELEASE = M.ID_RELEASE GROUP BY A.ID ORDER BY count(R.ID) DESC) WHERE ROWNUM <=10"
+			request: "SELECT * FROM(SELECT A.NAME FROM Artist A, Track T, Artist_Track S, Medium M, Release R WHERE A.ID_ARTIST =S.ID_ARTIST AND T.ID_TRACK=S.ID_TRACK AND T.ID_MEDIUM=M.ID_MEDIUM AND R.ID_RELEASE = M.ID_RELEASE AND A.TYPE='Group' GROUP BY A.NAME ORDER BY count(R.ID_RELEASE) DESC) WHERE ROWNUM <=10"
 		},
 		{
 			name: "e) Female artist with the most genres",
-			request: "SELECT A.name FROM Artist A WHERE (SELECT Count(*) FROM Artist_Genre G WHERE G.ID_ARTIST = A.ID_ARTIST) >= ALL (SELECT Count(*) FROM Artist_Genre G1, Artist A1 WHERE A1.ID_ARTIST <> A.ID_ARTIST AND G1.ID_ARTIST = A.ID_ARTIST)"
+			request: "SELECT NAME FROM (SELECT A.NAME AS NAME, COUNT(DISTINCT G.ID_GENRE) AS COUNT_GENRE FROM ARTIST_GENRE G, ARTIST A WHERE A.ID_ARTIST= G.ID_ARTIST AND A.GENDER='Female' GROUP BY A.NAME ORDER BY COUNT_GENRE DESC) WHERE ROWNUM=1"
 		},
 		{
-			name: "f) Cities that have more female artist than male artist",
-			request: "SELECT B.name FROM Area B WHERE B.type='city' AND (SELECT Count(*) FROM Artist A WHERE A.gender='female' AND A.ID_AREA= B.ID_AREA) > (SELECT Count(*) FROM Artist A1 WHERE A1.gender='male' AND A1.ID_AREA=B.ID_AREA )"
+			name: "f) ?Cities that have more female artist than male artist",
+			request: "--SELECT B.name FROM Area B WHERE B.type='City' AND (SELECT Count(*) FROM Artist A WHERE A.gender='Female' AND A.ID_AREA= B.ID_AREA) > (SELECT Count(*) FROM Artist A1 WHERE A1.gender='Male' AND A1.ID_AREA=B.ID_AREA) FROM Artist A1"
 		},
 		{
 			name: "g) The release with the most number of tracks",
-			request: "SELECT R.name FROM Release R WHERE (SELECT Count(T.ID) FROM Track T, Medium M WHERE R.ID=M.ID_RELEASE AND M.ID=T.ID_MEDIUM) > ALL (SELECT Count(T1.ID) FROM Release R1, Medium M1, Track T1 WHERE R1.ID<> R.ID AND M1.ID= T1.ID_MEDIUM AND R1.ID=M1.ID_RELEASE)"
+			request: "SELECT NAME FROM (SELECT R.name as name, COUNT(DISTINCT T.ID_TRACK) AS COUNT_TRACK FROM RELEASE R, TRACK T, MEDIUM M WHERE R.ID_RELEASE = M.ID_RELEASE AND M.ID_MEDIUM = T.ID_MEDIUM GROUP BY R.NAME ORDER BY COUNT_TRACK DESC) WHERE ROWNUM=1"
 		}
 	]
 
