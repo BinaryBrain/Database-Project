@@ -235,10 +235,11 @@
 		html += '<table class="table table-striped table-hover">'
 		html += "<tr>"
 
+		// Header
 		for(var i = 0, l = columns.length; i < l; i++) {
 			if(tableName) {
 				var idCol = "ID_"+tableName
-				if(columns[i].toLowerCase() !== idCol.toLowerCase()) {
+				if(columns[i].toUpperCase().substring(0,3) !== "ID_") {
 					html += "<th>" + firstCap(columns[i]) + "</th>"
 				}
 			} else {
@@ -248,6 +249,7 @@
 
 		html += "</tr>"
 
+		// Body
 		for(var i = 0, l = data.length; i < l; i++) {
 			if(tableName) {
 				var idCol = "ID_"+tableName.toUpperCase()
@@ -258,7 +260,7 @@
 			}
 
 			for(var j = 0, k = columns.length; j < k; j++) {
-				if(!tableName || columns[j].toLowerCase() !== idCol.toLowerCase()) {
+				if(!tableName || columns[j].toUpperCase().substring(0,3) !== "ID_") {
 					html += "<td>"
 
 					if(data[i][columns[j]]) {
