@@ -22,7 +22,7 @@
 		},
 		{
 			name: "f) ?Cities that have more female artist than male artist",
-			request: "--SELECT B.name FROM Area B WHERE B.type='City' AND (SELECT Count(*) FROM Artist A WHERE A.gender='Female' AND A.ID_AREA= B.ID_AREA) > (SELECT Count(*) FROM Artist A1 WHERE A1.gender='Male' AND A1.ID_AREA=B.ID_AREA) FROM Artist A1"
+			request: "--SELECT B.name FROM Area B WHERE B.type='City' AND (SELECT Count(*) FROM Artist A WHERE A.gender='Female' AND A.ID_AREA= B.ID_AREA) > (SELECT Count(*) FROM Artist A1 WHERE A1.gender='Male' AND A1.ID_AREA=B.ID_AREA)"
 		},
 		{
 			name: "g) The release with the most number of tracks",
