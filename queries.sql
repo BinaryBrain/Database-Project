@@ -1,4 +1,3 @@
-
 --A print the name of artist from switzerland
 SELECT A.name
 FROM Artist A, Area B
@@ -67,4 +66,51 @@ WHERE  (SELECT Count(T.ID)
 															FROM Release R1, Medium M1, Track T1
 															WHERE R1.ID<> R.ID AND M1.ID= T1.ID_MEDIUM AND R1.ID=M1.ID_RELEASE)
 																
-
+--B 2eme esssai
+SELECT *
+FROM
+(SELECT B.name AS NAME,(SELECT COUNT(DISTINCT A.ID_ARTIST)
+               FROM ARTIST A
+               WHERE A.GENDER='Female' AND B.ID_AREA=A.ID_AREA)
+               AS COUNTF, (SELECT COUNT(DISTINCT A.ID_ARTIST)
+                           FROM ARTIST A
+                           WHERE A.GENDER='Male' AND B.ID_AREA=A.ID_AREA)
+                           AS COUNTM, (SELECT COUNT(DISTINCT A.ID_ARTIST)
+                                        FROM ARTIST A
+                                         WHERE A.TYPE='Group' AND B.ID_AREA=A.ID_AREA)
+                                         AS COUNTG
+FROM AREA B
+ORDER BY COUNTF DESC)
+WHERE ROWNUM=1
+UNION
+SELECT *
+FROM
+(SELECT B.name AS NAME,(SELECT COUNT(DISTINCT A.ID_ARTIST)
+               FROM ARTIST A
+               WHERE A.GENDER='Female' AND B.ID_AREA=A.ID_AREA)
+               AS COUNTF, (SELECT COUNT(DISTINCT A.ID_ARTIST)
+                           FROM ARTIST A
+                           WHERE A.GENDER='Male' AND B.ID_AREA=A.ID_AREA)
+                           AS COUNTM, (SELECT COUNT(DISTINCT A.ID_ARTIST)
+                                        FROM ARTIST A
+                                         WHERE A.TYPE='Group' AND B.ID_AREA=A.ID_AREA)
+                                         AS COUNTG
+FROM AREA B
+ORDER BY COUNTM DESC)
+WHERE ROWNUM=1
+UNION
+SELECT *
+FROM
+(SELECT B.name AS NAME,(SELECT COUNT(DISTINCT A.ID_ARTIST)
+               FROM ARTIST A
+               WHERE A.GENDER='Female' AND B.ID_AREA=A.ID_AREA)
+               AS COUNTF, (SELECT COUNT(DISTINCT A.ID_ARTIST)
+                           FROM ARTIST A
+                           WHERE A.GENDER='Male' AND B.ID_AREA=A.ID_AREA)
+                           AS COUNTM, (SELECT COUNT(DISTINCT A.ID_ARTIST)
+                                        FROM ARTIST A
+                                         WHERE A.TYPE='Group' AND B.ID_AREA=A.ID_AREA)
+                                         AS COUNTG
+FROM AREA B
+ORDER BY COUNTG DESC)
+WHERE ROWNUM=1;
