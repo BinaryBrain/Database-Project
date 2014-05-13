@@ -25,9 +25,9 @@ HAVING A1.gender='female' AND A2.gender='male' AND A3.gender='group'
 --C List the name of 10 groups with the most recorded track
 SELECT *
 FROM(SELECT A.NAME
-	FROM  DUMMY_Artist A, DUMMY_Artist_Track S
+	FROM  Artist A, Artist_Track S
 	WHERE A.ID_ARTIST=S.ID_ARTIST AND A.TYPE='Group'
-	GROUP BY A.NAME
+	GROUP BY A.ID_ARTIST, A.NAME
 	ORDER BY count(S.ID_TRACK) DESC)
 WHERE ROWNUM <=10
 
@@ -44,13 +44,14 @@ WHERE ROWNUM <=10
 
 --E Print the name of female artist that have the most genres
 SELECT NAME
-FROM (SELECT A.NAME AS NAME, COUNT(DISTINCT G.ID_GENRE) AS COUNT_GENRE
+FROM (SELECT A.NAME AS NAME, 
+COUNT(DISTINCT G.ID_GENRE) AS COUNT_GENRE
       FROM ARTIST_GENRE G, ARTIST A
       WHERE A.ID_ARTIST= G.ID_ARTIST AND A.GENDER='Female'
-      GROUP BY A.NAME
-      ORDER BY COUNT_GENRE DESC
-      )
-WHERE ROWNUM=1;
+      GROUP BY A.ID_ARTIST, A.NAME
+      ORDER BY COUNT_GENRE DESC)
+WHERE ROWNUM=1
+
 
 --F Print the name of the cities that have more female artist than male artist										
 SELECT B.name
