@@ -3,29 +3,29 @@
 	
 	var buttons = [
 		{ 
-			name: "a) Artist from Switzerland", request: "SELECT A.name FROM Artist A, Area B WHERE A.ID_AREA = B.ID_AREA AND B.name= 'Switzerland'"
+			name: "A) Artist from Switzerland", request: "SELECT A.name FROM Artist A, Area B WHERE A.ID_AREA = B.ID_AREA AND B.name= 'Switzerland'"
 		},
 		{
-			name: "b) ?Area with the highest number of female, male and group artist", request: ""
+			name: "B) ?Area with the highest number of female, male and group artist", request: ""
 		},
 		{
-			name: "c) 10 groups with the most recorded track",
+			name: "C) 10 groups with the most recorded track",
 			request: "SELECT * FROM(SELECT A.NAME FROM  DUMMY_Artist A, DUMMY_Artist_Track S WHERE A.ID_ARTIST=S.ID_ARTIST AND A.TYPE='Group' GROUP BY A.NAME ORDER BY count(S.ID_TRACK) DESC)WHERE ROWNUM <=10"
 		},
 		{
-			name: "d) 10 groups with the most release",
+			name: "D) 10 groups with the most release",
 			request: "SELECT * FROM(SELECT A.NAME FROM Artist A, Track T, Artist_Track S, Medium M, Release R WHERE A.ID_ARTIST =S.ID_ARTIST AND T.ID_TRACK=S.ID_TRACK AND T.ID_MEDIUM=M.ID_MEDIUM AND R.ID_RELEASE = M.ID_RELEASE AND A.TYPE='Group' GROUP BY A.NAME ORDER BY count(R.ID_RELEASE) DESC) WHERE ROWNUM <=10"
 		},
 		{
-			name: "e) Female artist with the most genres",
+			name: "E) Female artist with the most genres",
 			request: "SELECT NAME FROM (SELECT A.NAME AS NAME, COUNT(G.ID_GENRE) AS COUNT_GENRE FROM ARTIST_GENRE G, ARTIST A WHERE A.ID_ARTIST= G.ID_ARTIST AND A.GENDER='Female' GROUP BY A.NAME ORDER BY COUNT_GENRE DESC) WHERE ROWNUM=1"
 		},
 		{
-			name: "f) ?Cities that have more female artist than male artist",
+			name: "F) ?Cities that have more female artist than male artist",
 			request: "--SELECT B.name FROM Area B WHERE B.type='City' AND (SELECT Count(*) FROM Artist A WHERE A.gender='Female' AND A.ID_AREA= B.ID_AREA) > (SELECT Count(*) FROM Artist A1 WHERE A1.gender='Male' AND A1.ID_AREA=B.ID_AREA)"
 		},
 		{
-			name: "g) The releases with the most number of tracks",
+			name: "G) The releases with the most number of tracks",
 			request: "SELECT R.name as name, COUNT(T.ID_TRACK) AS COUNT_TRACK FROM RELEASE R, TRACK T, MEDIUM M WHERE R.ID_RELEASE = M.ID_RELEASE AND M.ID_MEDIUM = T.ID_MEDIUM GROUP BY R.NAME ORDER BY COUNT_TRACK DESC"
 		}
 	]
@@ -107,10 +107,14 @@
 
 	$("#sql-buttons").html(html)
 
+	// Buttons
 	$("#sql-buttons .sql-button").click(function (event) {
 		event.preventDefault()
 		var id = $(this).attr('data-button-id')
 		var request = buttons[id].request
+		var name = $(this).text()
+
+		$("#table-title").text(name)
 
 		destroyTabs()
 
@@ -119,12 +123,15 @@
 		})
 	})
 
+	// Search
 	$("#search-form").submit(function (event) {
 		event.preventDefault()
 		var keyword = s($("#search-input").val())
 		var table = s($('#form-table-select').val())
 		var sqlReq = "SELECT * FROM "+table+" WHERE LOWER(name) LIKE lower('%" + keyword + "%')" // TODO Much complex request
 		
+		$("#table-title").html('Search: ' + firstCap(table) + ' &mdash; ' + keyword)
+
 		destroyTabs()
 
 		sendSQLRequest(sqlReq, function (data) {
@@ -132,11 +139,15 @@
 		})
 	})
 
+	// Links
 	$("#output").on('click', '.result-links', function (event) {
 		event.preventDefault()
 		var table = s($(this).attr("data-table"))
+		var name = s($(this).attr("data-name"))
 		var idCol = s($(this).attr("data-id-col"))
 		var id = s($(this).attr("data-id"))
+
+		$("#table-title").html(firstCap(table) + ' &mdash; ' + name)
 
 		destroyTabs()
 
@@ -253,8 +264,8 @@
 		for(var i = 0, l = data.length; i < l; i++) {
 			if(tableName) {
 				var idCol = "ID_"+tableName.toUpperCase()
-
-				html += '<tr class="result-links" href="#" data-table="'+tableName+'" data-id-col="'+idCol+'" data-id="'+data[i][idCol]+'">'
+				name = data[i].NAME
+				html += '<tr class="result-links" href="#" data-table="'+tableName+'" data-id-col="'+idCol+'" data-id="'+data[i][idCol]+'" data-name="'+name+'">'
 			} else {
 				html += "<tr>"
 			}
