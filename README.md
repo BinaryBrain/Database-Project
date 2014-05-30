@@ -24,7 +24,7 @@ On Linux/MacOS:
 ```
 cd server
 mkdir bin
-javac -cp "bin:lib/ojdbc7.jar" -d bin src/database/* src/webServer/*
+javac -cp bin:lib/ojdbc7.jar -d bin src/database/* src/webServer/*
 java -cp bin:lib/ojdbc7.jar webServer.WebServer
 
 ```
