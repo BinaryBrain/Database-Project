@@ -3,29 +3,38 @@
 	
 	var buttons = [
 		{ 
-			name: "A) Artist from Switzerland", request: "SELECT A.name FROM Artist A, Area B WHERE A.ID_AREA = B.ID_AREA AND B.name= 'Switzerland'"
+			name: "A) Artist from Switzerland",
+			table: "artist",
+			request: "SELECT A.name, A.ID_ARTIST FROM Artist A, Area B WHERE A.ID_AREA = B.ID_AREA AND B.name= 'Switzerland'"
 		},
 		{
-			name: "B) ?Area with the highest number of female, male and group artist", request: ""
+			name: "B) ?Area with the highest number of female, male and group artist",
+			table: "area",
+			request: ""
 		},
 		{
 			name: "C) 10 groups with the most recorded track",
+			table: "artist",
 			request: "SELECT * FROM(SELECT A.NAME FROM  DUMMY_Artist A, DUMMY_Artist_Track S WHERE A.ID_ARTIST=S.ID_ARTIST AND A.TYPE='Group' GROUP BY A.NAME ORDER BY count(S.ID_TRACK) DESC)WHERE ROWNUM <=10"
 		},
 		{
 			name: "D) 10 groups with the most release",
+			table: "artist",
 			request: "SELECT * FROM(SELECT A.NAME FROM Artist A, Track T, Artist_Track S, Medium M, Release R WHERE A.ID_ARTIST =S.ID_ARTIST AND T.ID_TRACK=S.ID_TRACK AND T.ID_MEDIUM=M.ID_MEDIUM AND R.ID_RELEASE = M.ID_RELEASE AND A.TYPE='Group' GROUP BY A.NAME ORDER BY count(R.ID_RELEASE) DESC) WHERE ROWNUM <=10"
 		},
 		{
 			name: "E) Female artist with the most genres",
+			table: "artist",
 			request: "SELECT NAME FROM (SELECT A.NAME AS NAME, COUNT(G.ID_GENRE) AS COUNT_GENRE FROM ARTIST_GENRE G, ARTIST A WHERE A.ID_ARTIST= G.ID_ARTIST AND A.GENDER='Female' GROUP BY A.NAME ORDER BY COUNT_GENRE DESC) WHERE ROWNUM=1"
 		},
 		{
 			name: "F) ?Cities that have more female artist than male artist",
+			table: "area",
 			request: "--SELECT B.name FROM Area B WHERE B.type='City' AND (SELECT Count(*) FROM Artist A WHERE A.gender='Female' AND A.ID_AREA= B.ID_AREA) > (SELECT Count(*) FROM Artist A1 WHERE A1.gender='Male' AND A1.ID_AREA=B.ID_AREA)"
 		},
 		{
 			name: "G) The releases with the most number of tracks",
+			table: "releases",
 			request: "SELECT R.name as name, COUNT(T.ID_TRACK) AS COUNT_TRACK FROM RELEASE R, TRACK T, MEDIUM M WHERE R.ID_RELEASE = M.ID_RELEASE AND M.ID_MEDIUM = T.ID_MEDIUM GROUP BY R.NAME ORDER BY COUNT_TRACK DESC"
 		}
 	]
@@ -113,13 +122,14 @@
 		var id = $(this).attr('data-button-id')
 		var request = buttons[id].request
 		var name = $(this).text()
+		var table = buttons[id].table
 
 		$("#table-title").text(name)
 
 		destroyTabs()
 
 		sendSQLRequest(request, function (data) {
-			renderTable(data, "#output")
+			renderTable(data, "#output", table)
 		})
 	})
 
@@ -142,10 +152,11 @@
 	// Links
 	$("#output").on('click', '.result-links', function (event) {
 		event.preventDefault()
-		var table = s($(this).attr("data-table"))
-		var name = s($(this).attr("data-name"))
-		var idCol = s($(this).attr("data-id-col"))
-		var id = s($(this).attr("data-id"))
+		var that = $(this)
+		var table = s($(that).attr("data-table"))
+		var name = s($(that).attr("data-name"))
+		var idCol = s($(that).attr("data-id-col"))
+		var id = s($(that).attr("data-id"))
 
 		$("#table-title").html(firstCap(table) + ' &mdash; ' + name)
 
@@ -188,6 +199,19 @@
 				renderTable(data, "#output", tables[0])
 			})
 		}
+	})
+
+	$("#output").on('click', '.delete-button', function (e) {
+		e.preventDefault()
+		e.stopPropagation()
+		var row = $(this).parent().parent()
+		var id = $(row).attr('data-id')
+		var table = $(row).attr('data-table')
+		var idCol = $(row).attr('data-id-col')
+
+		$(row).slideUp();
+		sendSQLRequest("DELET FROM " + table + " WHERE " + idCol + " = '" + id + "'")
+
 	})
 
 	$('#tabs a').click(function (e) {
@@ -257,6 +281,9 @@
 				html += "<th>" + firstCap(columns[i]) + "</th>"
 			}
 		}
+		
+		// delete button
+		html += '<th class="cell-delete-button"></th>'
 
 		html += "</tr>"
 
@@ -283,6 +310,14 @@
 					html += "</td>"
 				}
 			}
+
+			// delete button
+			html += '<td class="cell-delete-button">'
+			html += '<button type="button" class="btn btn-danger btn-xs pull-right delete-button" title="Delete Entry">'
+			html += '<span class="glyphicon glyphicon-remove">'
+			html += '</span>'
+			html += '</button>'
+			html += '</td>'
 
 			html += "</tr>"
 		}
