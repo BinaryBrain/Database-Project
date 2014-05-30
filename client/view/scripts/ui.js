@@ -46,66 +46,49 @@
 		'recording',
 		'release'
 	]
-
-	var structure = [
-		{
-			name: "area", columns: [
-				{ name: 'ID_AREA', search: false },
-				{ name: 'NAME', search: true },
-				{ name: 'TYPE', search: false }
-			]
-		},
-		{
-			name: "artist", columns: [
-				{ name: 'ID_ARTIST', search: false },
-				{ name: 'NAME', search: true },
-				{ name: 'TYPE', search: false },
-				{ name: 'GENDER', search: false },
-				{ name: 'ID_AREA', search: false }
-			]
-		},
-		{
-			name: "artist_genre", columns: [
-				{ name: 'ID_ARTIST', search: false },
-				{ name: 'ID_GENRE', search: false }
-			]
-		},
-		{
-			name: "genre", columns: [
-				{ name: 'ID_GENRE', search: false },
-				{ name: 'NAME', search: true },
-				{ name: 'COUNT', search: false }
-			]
-		},
-		{
-			name: "medium", columns: [
-				{ name: 'ID_MEDIUM', search: false },
-				{ name: 'FORMAT', search: false },
-				{ name: 'ID_RELEASE', search: false }
-			]
-		},
-		{
-			name: "recording", columns: [
-				{ name: 'ID_RECORDING', search: false },
-				{ name: 'NAME', search: true },
-				{ name: 'LENGTH', search: false }
-			]
-		},
-		{
-			name: "release", columns: [
-				{ name: 'ID_RELEASE', search: false },
-				{ name: 'NAME', search: true }
-			]
-		},
-		{
-			name: "track", columns: [
-				{ name: 'ID_TRACK', search: false },
-				{ name: 'POSITION', search: false },
-				{ name: 'ID_MEDIUM', search: false },
-				{ name: 'ID_RECORDING', search: false }
-			]
-		}		
-	]
+		var structure = {
+		"area": [
+			'ID_AREA',
+			'NAME',
+			'TYPE'
+		],
+		"artist": [
+			'ID_ARTIST',
+			'NAME',
+			'TYPE',
+			'GENDER',
+			'ID_AREA'
+		],
+		"artist_genre": [
+			'ID_ARTIST',
+			'ID_GENRE'
+		],
+		"genre": [
+			'ID_GENRE',
+			'NAME',
+			'COUNT'
+		],
+		"medium": [
+			'ID_MEDIUM',
+			'FORMAT',
+			'ID_RELEASE'
+		],
+		"recording": [
+			'ID_RECORDING',
+			'NAME',
+			'LENGTH'
+		],
+		"release": [
+			'ID_RELEASE',
+			'NAME'
+		],
+		"track": [
+			'ID_TRACK',
+			'POSITION',
+			'ID_MEDIUM',
+			'ID_RECORDING'
+		]
+	}
 
 	populateSelect(searchTable)
 
@@ -205,14 +188,14 @@
 		e.preventDefault()
 		e.stopPropagation()
 		var row = $(this).parent().parent()
-		var id = $(row).attr('data-id')
-		var table = $(row).attr('data-table')
-		var idCol = $(row).attr('data-id-col')
+		var id = s($(row).attr('data-id'))
+		var table = s($(row).attr('data-table'))
+		var idCol = s($(row).attr('data-id-col'))
 
 		$(row).slideUp();
+		alert("PLEASE UNCOMMENT ME!\nDELETE FROM " + table + " WHERE " + idCol + " = '" + id + "'")
 		// TODO Uncomment
 		//sendSQLRequest("DELET FROM " + table + " WHERE " + idCol + " = '" + id + "'")
-
 	})
 
 	$('.tabs a').click(function (e) {
@@ -222,12 +205,37 @@
 
 	$("#fullscreen-button").click(function (e) {
 		e.preventDefault()
-		toFullscreen(".output")
+		toFullscreen()
 	})
 
 	$("#fullscreen-close").click(function (e) {
 		e.preventDefault()
 		closeFullscreen()
+	})
+
+	$("#insert-form").submit(function (event) {
+		event.preventDefault()
+
+		var table = s($("#insert-form").attr('data-table-name'))
+		var keys = []
+		var values = []
+		
+		$("#insert-form input").each(function () {
+			keys.push($(this).attr('data-column-name'))
+			values.push(s($(this).val()))
+		})
+
+		console.log(values)
+
+		values = values.map(function (value) {
+			return (value === '') ? "null" : "'"+ value +"'"
+		})
+
+		console.log(values)
+		
+		alert("PLEASE UNCOMMENT ME!\nINSERT INTO "+ table + '( '+ keys.join(', ') +' ) VALUES ( ' + values.join(', ') + ' )')
+		// TODO Uncomment
+		//sendSQLRequest("INSERT INTO "+ table + '( '+ keys.join(', ') +' ) VALUES ( ' + values.join(', ') + ' )')
 	})
 
 	function sendSQLRequest(request, cb) {
@@ -251,6 +259,10 @@
 	}
 
 	function renderTable(data, outputDiv, tableName) {
+		createInsertForm(tableName)
+
+		$("#insert-div").slideUp()
+
 		// Handling empty tables
 		if (data.length === 0) {
 			$(outputDiv).html('<span class="data-empty">The table is empty. There is no result to show.</span>')
@@ -327,6 +339,24 @@
 		$(outputDiv).html(html)
 	}
 
+	function createInsertForm(table) {
+		var columns = structure[table]
+		var html = ""
+
+		$("#insert-form").attr('data-table-name', table)
+
+		for(var i = 0, l = columns.length; i < l; i++) {
+			html += '<div class="form-group">'
+			html += '<label class="sr-only" for="search-input">'+ columns[i] +'</label>'
+			html += '<input type="text" placeholder="'+ columns[i] +'" id="insert-form-'+ columns[i] +'" class="form-control" data-column-name="'+ columns[i] +'">'
+			html += '</div> '
+		}
+
+		html += '<button class="btn btn-primary" type="submit">Insert <span class="glyphicon glyphicon-save"></span></button>'
+
+		$("#insert-form").html(html)
+	}
+
 	function htmlEntities(str) {
 		return $('<div/>').text(str).html();
 	}
@@ -401,8 +431,7 @@
 		$("#ajax-loader").hide()
 	}
 
-	function toFullscreen(div) {
-		//$("#fullscreen-content").html($(div).html());
+	function toFullscreen() {
 		$("#fullscreen").fadeIn()
 	}
 
