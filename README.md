@@ -6,10 +6,16 @@ Database-Project
 Run
 ---
 
+1) Make sure you're connected on the EPFL network
+
+2) Launch the Java server with the following commands:
+
 ```
 cd server
 java -cp bin/ webServer.WebServer
 ```
+
+3) Go to [localhost:7123](http://localhost:7123/)
 
 Git Setup
 ---------
