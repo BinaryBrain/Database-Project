@@ -129,7 +129,7 @@
 		destroyTabs()
 
 		sendSQLRequest(request, function (data) {
-			renderTable(data, "#output", table)
+			renderTable(data, ".output", table)
 		})
 	})
 
@@ -145,12 +145,12 @@
 		destroyTabs()
 
 		sendSQLRequest(sqlReq, function (data) {
-			renderTable(data, "#output", table)
+			renderTable(data, ".output", table)
 		})
 	})
 
 	// Links
-	$("#output").on('click', '.result-links', function (event) {
+	$(".output").on('click', '.result-links', function (event) {
 		event.preventDefault()
 		var that = $(this)
 		var table = s($(that).attr("data-table"))
@@ -191,17 +191,17 @@
 			createTabs(tables)
 			for(var i = 0; i < tables.length; i++) {
 				sendSQLRequest(requests[tables[i]], function (data, table) {
-					renderTable(data, "#output #table-"+table, table)
+					renderTable(data, ".output .table-"+table, table)
 				}, tables[i])
 			}
 		} else {
 			sendSQLRequest(requests[tables[0]], function (data) {
-				renderTable(data, "#output", tables[0])
+				renderTable(data, ".output", tables[0])
 			})
 		}
 	})
 
-	$("#output").on('click', '.delete-button', function (e) {
+	$(".output").on('click', '.delete-button', function (e) {
 		e.preventDefault()
 		e.stopPropagation()
 		var row = $(this).parent().parent()
@@ -210,18 +210,19 @@
 		var idCol = $(row).attr('data-id-col')
 
 		$(row).slideUp();
-		sendSQLRequest("DELET FROM " + table + " WHERE " + idCol + " = '" + id + "'")
+		// TODO Uncomment
+		//sendSQLRequest("DELET FROM " + table + " WHERE " + idCol + " = '" + id + "'")
 
 	})
 
-	$('#tabs a').click(function (e) {
+	$('.tabs a').click(function (e) {
 		e.preventDefault()
 		$(this).tab('show')
 	})
 
 	$("#fullscreen-button").click(function (e) {
 		e.preventDefault()
-		toFullscreen("#output")
+		toFullscreen(".output")
 	})
 
 	$("#fullscreen-close").click(function (e) {
@@ -360,26 +361,27 @@
 			for(var i = 0; i < tables.length; i++) {
 				if(i === 0) {
 					htmlTabs += '<li class="active">'
-					htmlDivs += '<div class="tab-pane active" id="table-'+tables[i]+'"></div>'
+					htmlDivs += '<div class="tab-pane active table-'+tables[i]+'" id="table-'+tables[i]+'"></div>'
 				} else {
 					htmlTabs += '<li>'
-					htmlDivs += '<div class="tab-pane" id="table-'+tables[i]+'"></div>'
+					htmlDivs += '<div class="tab-pane table-'+tables[i]+'" id="table-'+tables[i]+'"></div>'
 				}
 
 				htmlTabs += '<a href="#table-'+tables[i]+'" data-toggle="tab">'+firstCap(tables[i])+'</a></li>'
 				htmlTabs += '</li>'
 			}
 
-			$("#tabs").html(htmlTabs)
-			$("#output").html(htmlDivs)
+			$(".tabs").html(htmlTabs)
+			console.log($(".output"), htmlDivs)
+			$(".output").html(htmlDivs)
 		} else {
 			debug.write("Warning: trying to create one tab.")
 		}
 	}
 
 	function destroyTabs(tables) {
-		$("#tabs").html('')
-		$("#output").html('')
+		$(".tabs").html('')
+		$(".output").html('')
 	}
 
 	function showAjaxLoader() {
@@ -391,7 +393,7 @@
 	}
 
 	function toFullscreen(div) {
-		$("#fullscreen-content").html($(div).html());
+		//$("#fullscreen-content").html($(div).html());
 		$("#fullscreen").fadeIn()
 	}
 
