@@ -354,29 +354,38 @@
 		return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 	}
 
+	var uid = 0
+
 	function createTabs(tables) {
-		if(tables.length > 1) {
-			var htmlTabs = ''
-			var htmlDivs = ''
-			for(var i = 0; i < tables.length; i++) {
-				if(i === 0) {
-					htmlTabs += '<li class="active">'
-					htmlDivs += '<div class="tab-pane active table-'+tables[i]+'" id="table-'+tables[i]+'"></div>'
-				} else {
-					htmlTabs += '<li>'
-					htmlDivs += '<div class="tab-pane table-'+tables[i]+'" id="table-'+tables[i]+'"></div>'
+		function createTabs(tables, tabs, divs) {
+			if(tables.length > 1) {
+				var htmlTabs = ''
+				var htmlDivs = ''
+				for(var i = 0; i < tables.length; i++) {
+					if(i === 0) {
+						htmlTabs += '<li class="active">'
+						htmlDivs += '<div class="tab-pane active table-'+tables[i]+'" id="table-'+tables[i]+ '-' + uid +'"></div>'
+					} else {
+						htmlTabs += '<li>'
+						htmlDivs += '<div class="tab-pane table-'+tables[i]+'" id="table-'+tables[i]+ '-' + uid +'"></div>'
+					}
+
+					htmlTabs += '<a href="#table-'+tables[i]+ '-' + uid +'" data-toggle="tab">'+firstCap(tables[i])+'</a></li>'
+					htmlTabs += '</li>'
+
+					uid++
 				}
 
-				htmlTabs += '<a href="#table-'+tables[i]+'" data-toggle="tab">'+firstCap(tables[i])+'</a></li>'
-				htmlTabs += '</li>'
+				$(tabs).html(htmlTabs)
+				console.log($(divs), htmlDivs)
+				$(divs).html(htmlDivs)
+			} else {
+				debug.write("Warning: trying to create one tab.")
 			}
-
-			$(".tabs").html(htmlTabs)
-			console.log($(".output"), htmlDivs)
-			$(".output").html(htmlDivs)
-		} else {
-			debug.write("Warning: trying to create one tab.")
 		}
+
+		createTabs(tables, "#main-tabs", "#main-output")
+		createTabs(tables, "#fullscreen-tabs", "#fullscreen-content")
 	}
 
 	function destroyTabs(tables) {

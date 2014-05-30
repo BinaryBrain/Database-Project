@@ -15,7 +15,7 @@
 <body>
 	<div id="fullscreen">
 		<button  class="btn btn-default" title="close" id="fullscreen-close"><span class="glyphicon glyphicon-remove"></span></button>
-		<ul class="tabs nav nav-tabs nav-justified"></ul>
+		<ul  id="fullscreen-tabs" class="tabs nav nav-tabs nav-justified"></ul>
 		<div id="fullscreen-content" class="tab-content output"></div>
 	</div>
 	<div class="container">
@@ -48,9 +48,9 @@
 				</form>
 				<button type="button" class="btn btn-default pull-right" id="fullscreen-button" title="Fullscreen"><span class="glyphicon glyphicon-fullscreen"></span></button>
 				<h3><div id="table-title">Output</div></h3>
-				<ul class="tabs nav nav-tabs nav-justified"></ul>
+				<ul class="tabs nav nav-tabs nav-justified" id="main-tabs"></ul>
 				<img id="ajax-loader" src="ajax-loader.gif" alt="Please wait...">
-				<div class="tab-content output">
+				<div id="main-output" class="tab-content output">
 					<span class="data-empty">The table is empty. There is no result to show.</span>
 				</div>
 
