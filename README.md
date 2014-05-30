@@ -10,9 +10,23 @@ Run
 
 2) Launch the Java server with the following commands:
 
+On Windows:
+
 ```
 cd server
-java -cp bin/ webServer.WebServer
+mkdir bin
+javac -cp "bin;lib/ojdbc7.jar" -d bin src/database/* src/webServer/*
+java -cp "bin/;lib/ojdbc7.jar" webServer.WebServer
+```
+
+On Linux/MacOS:
+
+```
+cd server
+mkdir bin
+javac -cp "bin:lib/ojdbc7.jar" -d bin src/database/* src/webServer/*
+java -cp bin:lib/ojdbc7.jar webServer.WebServer
+
 ```
 
 3) Go to [localhost:7123](http://localhost:7123/)
