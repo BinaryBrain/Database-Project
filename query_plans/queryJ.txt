@@ -1,0 +1,35 @@
+Plan hash value: 951475009
+ 
+--------------------------------------------------------------------------------------------------------
+| Id  | Operation                      | Name          | Rows  | Bytes |TempSpc| Cost (%CPU)| Time     |
+--------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT               |               | 37800 |    18M|       |  3809   (4)| 00:00:46 |
+|*  1 |  VIEW                          |               | 37800 |    18M|       |  3809   (4)| 00:00:46 |
+|*  2 |   WINDOW SORT PUSHED RANK      |               | 37800 |  2030K|  5048K|  3809   (4)| 00:00:46 |
+|   3 |    SORT GROUP BY               |               | 37800 |  2030K|  5048K|  3809   (4)| 00:00:46 |
+|   4 |     NESTED LOOPS               |               | 37800 |  2030K|       |  2776   (4)| 00:00:34 |
+|*  5 |      HASH JOIN                 |               |   797 | 35865 |       |  1179   (9)| 00:00:15 |
+|*  6 |       HASH JOIN                |               |   797 |  9564 |       |   191  (28)| 00:00:03 |
+|   7 |        VIEW                    | VW_NSO_1      |    10 |    40 |       |   115  (40)| 00:00:02 |
+|*  8 |         COUNT STOPKEY          |               |       |       |       |            |          |
+|   9 |          VIEW                  |               |  1725 |  6900 |       |   115  (40)| 00:00:02 |
+|* 10 |           SORT ORDER BY STOPKEY|               |  1725 | 13800 |       |   115  (40)| 00:00:02 |
+|  11 |            SORT GROUP BY       |               |  1725 | 13800 |       |   115  (40)| 00:00:02 |
+|  12 |             TABLE ACCESS FULL  | ARTIST_GENRE  |   137K|  1074K|       |    74   (7)| 00:00:01 |
+|  13 |        TABLE ACCESS FULL       | ARTIST_GENRE  |   137K|  1074K|       |    74   (7)| 00:00:01 |
+|* 14 |       TABLE ACCESS FULL        | ARTIST        |   271K|  8759K|       |   982   (5)| 00:00:12 |
+|* 15 |      INDEX RANGE SCAN          | SYS_C00553579 |    47 |   470 |       |     2   (0)| 00:00:01 |
+--------------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   1 - filter("RN"=1)
+   2 - filter(ROW_NUMBER() OVER ( PARTITION BY "AG"."ID_GENRE" ORDER BY COUNT(DISTINCT 
+              "AT"."ID_TRACK") DESC )<=1)
+   5 - access("A"."ID_ARTIST"="AG"."ID_ARTIST")
+   6 - access("AG"."ID_GENRE"="ID_GENRE")
+   8 - filter(ROWNUM<=10)
+  10 - filter(ROWNUM<=10)
+  14 - filter("A"."GENDER"='Female')
+  15 - access("A"."ID_ARTIST"="AT"."ID_ARTIST")

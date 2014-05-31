@@ -1,0 +1,27 @@
+Plan hash value: 1998089369
+ 
+-------------------------------------------------------------------------------------------------
+| Id  | Operation                | Name         | Rows  | Bytes |TempSpc| Cost (%CPU)| Time     |
+-------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT         |              |    10 |  5150 |       |   553K  (3)| 01:50:41 |
+|*  1 |  COUNT STOPKEY           |              |       |       |       |            |          |
+|   2 |   VIEW                   |              |    15M|  7753M|       |   553K  (3)| 01:50:41 |
+|*  3 |    SORT ORDER BY STOPKEY |              |    15M|   828M|  1942M|   553K  (3)| 01:50:41 |
+|   4 |     SORT GROUP BY        |              |    15M|   828M|  1942M|   553K  (3)| 01:50:41 |
+|*  5 |      HASH JOIN           |              |    15M|   828M|    25M|   122K  (4)| 00:24:33 |
+|   6 |       TABLE ACCESS FULL  | ARTIST       |   815K|    16M|       |   968   (4)| 00:00:12 |
+|*  7 |       HASH JOIN          |              |    15M|   511M|    23M| 85495   (4)| 00:17:06 |
+|   8 |        TABLE ACCESS FULL | MEDIUM       |  1044K|    11M|       |   716   (6)| 00:00:09 |
+|*  9 |        HASH JOIN         |              |    15M|   331M|   352M| 57569   (5)| 00:11:31 |
+|  10 |         TABLE ACCESS FULL| ARTIST_TRACK |    16M|   160M|       |  8530   (7)| 00:01:43 |
+|  11 |         TABLE ACCESS FULL| TRACK        |    15M|   180M|       | 12594   (5)| 00:02:32 |
+-------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   1 - filter(ROWNUM<=10)
+   3 - filter(ROWNUM<=10)
+   5 - access("A"."ID_ARTIST"="AT"."ID_ARTIST")
+   7 - access("T"."ID_MEDIUM"="M"."ID_MEDIUM")
+   9 - access("AT"."ID_TRACK"="T"."ID_TRACK")
