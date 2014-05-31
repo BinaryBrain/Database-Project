@@ -1,6 +1,10 @@
-/*List the release which is associated with the most mediums. If there are more than one such release, list 
-all such releases. */
-
+--List the release which is associated with the most mediums. If there are more than one such release, list 
+--all such releases.
+/*
+For each release we count the number of medium they are associated to and we order these releases by this count.
+Then we inject this result table in a from of another query. In this outer query we check for all releases if 
+the count is equal to the max count of all releases.
+*/
 SELECT RID
 FROM(
       SELECT R.ID_RELEASE AS RID, COUNT(M.ID_MEDIUM) AS COUNTM

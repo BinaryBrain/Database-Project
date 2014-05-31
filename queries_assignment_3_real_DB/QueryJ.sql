@@ -1,5 +1,10 @@
 --For each of the 10 genres with the most artists, list the female artist that has recorded the highest 
 --number of tracks. 
+/*
+	First we order the genre by the count of their artists and select the top 10 of them. Then for each genre that belongs to this subset
+	we check if it has female artists in it. If so we order its femals artists by counting the number of track they did with an over partition 
+	operator and select the first row.
+*/
 SELECT NAME
 FROM(
   SELECT AG.ID_GENRE, A.NAME AS NAME, COUNT(DISTINCT AT.ID_TRACK), ROW_NUMBER()OVER (PARTITION BY AG.ID_GENRE ORDER BY COUNT(DISTINCT AT.ID_TRACK) DESC) AS RN

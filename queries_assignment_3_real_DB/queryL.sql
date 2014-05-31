@@ -1,6 +1,13 @@
-/*For each area with more than 10 groups, list the 5 male artists that have recorded the highest number 
-of tracks.*/
-
+--For each area with more than 10 groups, list the 5 male artists that have recorded the highest number 
+--of tracks.
+/*
+Select the areas that have more than 10 groups and for each of these areas select 
+*/
+/*
+ERREUR ici on ne selectionne que une area qui respecte la condition des 10 groups pour display ses hommes mais normalement
+plusieurs area sont sensées respecter ce critère non? Donc dans l'output on ne devrait pas avoir que 5 lignes mais un multiple
+de 5?
+*/
 SELECT *
 FROM (
 SELECT A.NAME, A.ID_ARTIST
