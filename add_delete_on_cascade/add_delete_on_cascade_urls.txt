@@ -1,0 +1,10 @@
+http://stackoverflow.com/questions/16692837/oracle-sql-alter-table
+http://stackoverflow.com/questions/1571581/how-to-add-on-delete-cascade-in-alter-table-statement
+http://www.techonthenet.com/oracle/foreign_keys/foreign_delete.php
+
+
+ALTER TABLE table_name
+ADD CONSTRAINT constraint_name
+   FOREIGN KEY (column1, column2, ... column_n)
+   REFERENCES parent_table (column1, column2, ... column_n)
+   ON DELETE CASCADE;
