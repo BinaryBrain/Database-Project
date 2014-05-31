@@ -1,0 +1,2 @@
+http://docs.oracle.com/cd/B28359_01/server.111/b28274/ex_plan.htm#i18300
+http://www.developpez.net/forums/d1244717/bases-donnees/oracle/explain-plan-sous-sql-developer/
