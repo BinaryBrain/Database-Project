@@ -1,0 +1,40 @@
+Plan hash value: 1509272345
+ 
+-------------------------------------------------------------------------------------------------
+| Id  | Operation               | Name          | Rows  | Bytes |TempSpc| Cost (%CPU)| Time     |
+-------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT        |               |   115K|  2036K|       |  5229  (68)| 00:01:03 |
+|   1 |  SORT UNIQUE            |               |   115K|  2036K|  5496K|  5229  (68)| 00:01:03 |
+|   2 |   UNION-ALL             |               |       |       |       |            |          |
+|*  3 |    HASH JOIN ANTI       |               | 38618 |   678K|       |  1541   (5)| 00:00:19 |
+|   4 |     INDEX FAST FULL SCAN| SYS_C00552232 | 40346 |   197K|       |    27   (4)| 00:00:01 |
+|   5 |     VIEW                | VW_NSO_1      |   137K|  1745K|       |  1509   (5)| 00:00:19 |
+|*  6 |      HASH JOIN          |               |   137K|  2685K|  2688K|  1509   (5)| 00:00:19 |
+|   7 |       TABLE ACCESS FULL | ARTIST_GENRE  |   137K|  1074K|       |    74   (7)| 00:00:01 |
+|*  8 |       TABLE ACCESS FULL | ARTIST        |   271K|  3185K|       |   982   (5)| 00:00:12 |
+|*  9 |    HASH JOIN ANTI       |               | 38618 |   678K|       |  1541   (5)| 00:00:19 |
+|  10 |     INDEX FAST FULL SCAN| SYS_C00552232 | 40346 |   197K|       |    27   (4)| 00:00:01 |
+|  11 |     VIEW                | VW_NSO_2      |   137K|  1745K|       |  1509   (5)| 00:00:19 |
+|* 12 |      HASH JOIN          |               |   137K|  2685K|  2688K|  1509   (5)| 00:00:19 |
+|  13 |       TABLE ACCESS FULL | ARTIST_GENRE  |   137K|  1074K|       |    74   (7)| 00:00:01 |
+|* 14 |       TABLE ACCESS FULL | ARTIST        |   271K|  3185K|       |   982   (5)| 00:00:12 |
+|* 15 |    HASH JOIN ANTI       |               | 38618 |   678K|       |  1468   (5)| 00:00:18 |
+|  16 |     INDEX FAST FULL SCAN| SYS_C00552232 | 40346 |   197K|       |    27   (4)| 00:00:01 |
+|  17 |     VIEW                | VW_NSO_3      |   137K|  1745K|       |  1437   (5)| 00:00:18 |
+|* 18 |      HASH JOIN          |               |   137K|  2819K|  2688K|  1437   (5)| 00:00:18 |
+|  19 |       TABLE ACCESS FULL | ARTIST_GENRE  |   137K|  1074K|       |    74   (7)| 00:00:01 |
+|* 20 |       TABLE ACCESS FULL | ARTIST        |   203K|  2587K|       |   979   (5)| 00:00:12 |
+-------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   3 - access("G"."ID_GENRE"="$nso_col_1")
+   6 - access("AG"."ID_ARTIST"="A"."ID_ARTIST")
+   8 - filter("A"."GENDER"='Female')
+   9 - access("G"."ID_GENRE"="$nso_col_1")
+  12 - access("AG"."ID_ARTIST"="A"."ID_ARTIST")
+  14 - filter("A"."GENDER"='Male')
+  15 - access("G"."ID_GENRE"="$nso_col_1")
+  18 - access("AG"."ID_ARTIST"="A"."ID_ARTIST")
+  20 - filter("A"."TYPE"='Group')
