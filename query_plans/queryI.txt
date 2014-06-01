@@ -1,32 +1,31 @@
-Plan hash value: 3750515535
+Plan hash value: 59461455
  
---------------------------------------------------------------------------------------------------------
-| Id  | Operation                           | Name             | Rows  | Bytes | Cost (%CPU)| Time     |
---------------------------------------------------------------------------------------------------------
-|   0 | SELECT STATEMENT                    |                  |    25 |   525 |   201   (2)| 00:00:03 |
-|   1 |  HASH UNIQUE                        |                  |    25 |   525 |   201   (2)| 00:00:03 |
-|*  2 |   COUNT STOPKEY                     |                  |       |       |            |          |
-|   3 |    VIEW                             |                  |    47 |   987 |   200   (1)| 00:00:03 |
-|*  4 |     SORT ORDER BY STOPKEY           |                  |    47 |  3572 |   200   (1)| 00:00:03 |
-|   5 |      HASH GROUP BY                  |                  |    47 |  3572 |   200   (1)| 00:00:03 |
-|   6 |       NESTED LOOPS                  |                  |    47 |  3572 |   198   (0)| 00:00:03 |
-|   7 |        NESTED LOOPS                 |                  |    47 |  2303 |   104   (0)| 00:00:02 |
-|   8 |         NESTED LOOPS                |                  |    50 |  1550 |     7   (0)| 00:00:01 |
-|   9 |          TABLE ACCESS BY INDEX ROWID| ARTIST           |     1 |    21 |     5   (0)| 00:00:01 |
-|* 10 |           INDEX RANGE SCAN          | INDEX_NAME       |     1 |       |     3   (0)| 00:00:01 |
-|* 11 |          INDEX RANGE SCAN           | SYS_C00553579    |    47 |   470 |     2   (0)| 00:00:01 |
-|  12 |         TABLE ACCESS BY INDEX ROWID | TRACK            |     1 |    18 |     2   (0)| 00:00:01 |
-|* 13 |          INDEX UNIQUE SCAN          | PRIMARY_ID_TRACK |     1 |       |     1   (0)| 00:00:01 |
-|  14 |        TABLE ACCESS BY INDEX ROWID  | RECORDING        |     1 |    27 |     2   (0)| 00:00:01 |
-|* 15 |         INDEX UNIQUE SCAN           | SYS_C00552286    |     1 |       |     1   (0)| 00:00:01 |
---------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------
+| Id  | Operation                          | Name             | Rows  | Bytes | Cost (%CPU)| Time     |
+-------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT                   |                  |    25 |   525 |  1172   (4)| 00:00:15 |
+|   1 |  HASH UNIQUE                       |                  |    25 |   525 |  1172   (4)| 00:00:15 |
+|*  2 |   COUNT STOPKEY                    |                  |       |       |            |          |
+|   3 |    VIEW                            |                  |    47 |   987 |  1171   (4)| 00:00:15 |
+|*  4 |     SORT ORDER BY STOPKEY          |                  |    47 |  3572 |  1171   (4)| 00:00:15 |
+|   5 |      HASH GROUP BY                 |                  |    47 |  3572 |  1171   (4)| 00:00:15 |
+|   6 |       NESTED LOOPS                 |                  |    47 |  3572 |  1169   (4)| 00:00:15 |
+|   7 |        NESTED LOOPS                |                  |    47 |  2303 |  1075   (4)| 00:00:13 |
+|   8 |         NESTED LOOPS               |                  |    50 |  1550 |   978   (4)| 00:00:12 |
+|*  9 |          TABLE ACCESS FULL         | ARTIST           |     1 |    21 |   976   (4)| 00:00:12 |
+|* 10 |          INDEX RANGE SCAN          | SYS_C00553579    |    47 |   470 |     2   (0)| 00:00:01 |
+|  11 |         TABLE ACCESS BY INDEX ROWID| TRACK            |     1 |    18 |     2   (0)| 00:00:01 |
+|* 12 |          INDEX UNIQUE SCAN         | PRIMARY_ID_TRACK |     1 |       |     1   (0)| 00:00:01 |
+|  13 |        TABLE ACCESS BY INDEX ROWID | RECORDING        |     1 |    27 |     2   (0)| 00:00:01 |
+|* 14 |         INDEX UNIQUE SCAN          | SYS_C00552286    |     1 |       |     1   (0)| 00:00:01 |
+-------------------------------------------------------------------------------------------------------
  
 Predicate Information (identified by operation id):
 ---------------------------------------------------
  
    2 - filter(ROWNUM<=25)
    4 - filter(ROWNUM<=25)
-  10 - access("A"."NAME"='Metallica')
-  11 - access("A"."ID_ARTIST"="AT"."ID_ARTIST")
-  13 - access("AT"."ID_TRACK"="T"."ID_TRACK")
-  15 - access("T"."ID_RECORDING"="R"."ID_RECORDING")
+   9 - filter("A"."NAME"='Metallica')
+  10 - access("A"."ID_ARTIST"="AT"."ID_ARTIST")
+  12 - access("AT"."ID_TRACK"="T"."ID_TRACK")
+  14 - access("T"."ID_RECORDING"="R"."ID_RECORDING")

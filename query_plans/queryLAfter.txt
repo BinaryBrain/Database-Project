@@ -1,0 +1,33 @@
+Plan hash value: 3565151132
+ 
+-----------------------------------------------------------------------------------------------------
+| Id  | Operation                   | Name          | Rows  | Bytes |TempSpc| Cost (%CPU)| Time     |
+-----------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT            |               |     5 |  2575 |       | 16731   (7)| 00:03:21 |
+|*  1 |  COUNT STOPKEY              |               |       |       |       |            |          |
+|   2 |   VIEW                      |               |   656K|   322M|       | 16731   (7)| 00:03:21 |
+|*  3 |    SORT ORDER BY STOPKEY    |               |   656K|    20M|    50M| 16731   (7)| 00:03:21 |
+|   4 |     HASH GROUP BY           |               |   656K|    20M|    50M| 16731   (7)| 00:03:21 |
+|*  5 |      HASH JOIN              |               |   656K|    20M|       | 10776   (9)| 00:02:10 |
+|*  6 |       HASH JOIN             |               | 13852 |   378K|       |  1998   (7)| 00:00:24 |
+|   7 |        VIEW                 | VW_NSO_1      |     7 |    35 |       |  1013   (8)| 00:00:13 |
+|*  8 |         FILTER              |               |       |       |       |            |          |
+|   9 |          SORT GROUP BY      |               |     7 |   140 |       |  1013   (8)| 00:00:13 |
+|  10 |           NESTED LOOPS      |               | 61839 |  1207K|       |  1004   (7)| 00:00:13 |
+|* 11 |            TABLE ACCESS FULL| ARTIST        | 61839 |   905K|       |   982   (5)| 00:00:12 |
+|* 12 |            INDEX UNIQUE SCAN| SYS_C00552231 |     1 |     5 |       |     0   (0)| 00:00:01 |
+|* 13 |        TABLE ACCESS FULL    | ARTIST        |   247K|  5555K|       |   980   (5)| 00:00:12 |
+|  14 |       TABLE ACCESS FULL     | ARTIST_TRACK  |    16M|    80M|       |  8468   (7)| 00:01:42 |
+-----------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   1 - filter(ROWNUM<=5)
+   3 - filter(ROWNUM<=5)
+   5 - access("A"."ID_ARTIST"="AT"."ID_ARTIST")
+   6 - access("A"."ID_AREA"="$nso_col_1")
+   8 - filter(COUNT(DISTINCT "A2"."ID_ARTIST")>10)
+  11 - filter("A2"."ID_AREA" IS NOT NULL AND "A2"."TYPE"='Group')
+  12 - access("AR"."ID_AREA"="A2"."ID_AREA")
+  13 - filter("A"."ID_AREA" IS NOT NULL)

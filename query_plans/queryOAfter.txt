@@ -1,0 +1,32 @@
+Plan hash value: 1469130617
+ 
+-------------------------------------------------------------------------------------------------
+| Id  | Operation               | Name          | Rows  | Bytes |TempSpc| Cost (%CPU)| Time     |
+-------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT        |               |   923K|    22M|       | 15844   (4)| 00:03:11 |
+|*  1 |  VIEW                   |               |   923K|    22M|       |  7922   (4)| 00:01:36 |
+|   2 |   SORT ORDER BY         |               |   923K|    10M|       |  7922   (4)| 00:01:36 |
+|   3 |    SORT GROUP BY NOSORT |               |   923K|    10M|       |  7922   (4)| 00:01:36 |
+|   4 |     MERGE JOIN          |               |  1047K|    11M|       |  7922   (4)| 00:01:36 |
+|   5 |      INDEX FULL SCAN    | SYS_C00552234 |  1236K|  7243K|       |  3667   (2)| 00:00:45 |
+|*  6 |      SORT JOIN          |               |  1044K|  6121K|    24M|  4255   (6)| 00:00:52 |
+|   7 |       TABLE ACCESS FULL | MEDIUM        |  1044K|  6121K|       |   716   (6)| 00:00:09 |
+|   8 |   SORT AGGREGATE        |               |     1 |    13 |       |            |          |
+|   9 |    VIEW                 |               |   923K|    11M|       |  7922   (4)| 00:01:36 |
+|  10 |     SORT GROUP BY       |               |   923K|    10M|       |  7922   (4)| 00:01:36 |
+|  11 |      MERGE JOIN         |               |  1047K|    11M|       |  7922   (4)| 00:01:36 |
+|  12 |       INDEX FULL SCAN   | SYS_C00552234 |  1236K|  7243K|       |  3667   (2)| 00:00:45 |
+|* 13 |       SORT JOIN         |               |  1044K|  6121K|    24M|  4255   (6)| 00:00:52 |
+|  14 |        TABLE ACCESS FULL| MEDIUM        |  1044K|  6121K|       |   716   (6)| 00:00:09 |
+-------------------------------------------------------------------------------------------------
+ 
+Predicate Information (identified by operation id):
+---------------------------------------------------
+ 
+   1 - filter("COUNTM"= (SELECT MAX("COUNTM") FROM  (SELECT COUNT(*) "COUNTM" FROM 
+              "MEDIUM" "M","RELEASE" "R" WHERE "M"."ID_RELEASE"="R"."ID_RELEASE" GROUP BY 
+              "R"."ID_RELEASE") "from$_subquery$_004"))
+   6 - access("R"."ID_RELEASE"="M"."ID_RELEASE")
+       filter("R"."ID_RELEASE"="M"."ID_RELEASE")
+  13 - access("M"."ID_RELEASE"="R"."ID_RELEASE")
+       filter("M"."ID_RELEASE"="R"."ID_RELEASE")
