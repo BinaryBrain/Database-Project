@@ -1,8 +1,10 @@
 --List the 10 groups with the highest number of tracks that appear on compilations. A compilation is a 
 --medium that contains tracks associated with more than one artist.
-
-
-
+/*
+Select an artist A1 and see if on one of the medium he did an artist A2 has 
+also done one track (or more but one is sufficient to respect the compilation criteria). 
+Then order all the artist that respect this condition by their number of tracks and select the top 10 of them.
+*/
 SELECT NAME
 FROM(
 SELECT A.NAME AS NAME

@@ -1,7 +1,9 @@
-/* List the top 10 artists according to their track-to-release ratio. This ratio is computed by dividing the 
-number of tracks an artist is associated with by the number of releases this artist has contributed a track 
-to. */
-
+--List the top 10 artists according to their track-to-release ratio. This ratio is computed by dividing the 
+--number of tracks an artist is associated with by the number of releases this artist has contributed a track 
+--to.
+/*
+For each artist we compute his ratio, we order all the artists by it and we select the top 10 of them.
+*/
 SELECT *
 FROM (
 SELECT A.NAME, COUNT(DISTINCT T.ID_TRACK) / COUNT(DISTINCT M.ID_RELEASE) AS RATIO

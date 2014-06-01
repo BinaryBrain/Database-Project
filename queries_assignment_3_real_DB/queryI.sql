@@ -1,7 +1,10 @@
-/*American metal group Metallica is asking its fans to choose the setlist for its upcoming concert in 
-Switzerland. Assuming that the Metallica fans will choose the songs that have appeared on the highest 
-number of mediums, list the top 25 songs. */
-
+--American metal group Metallica is asking its fans to choose the setlist for its upcoming concert in 
+--Switzerland. Assuming that the Metallica fans will choose the songs that have appeared on the highest 
+--number of mediums, list the top 25 songs. 
+/*
+Order the recordings of Metallica by the count of their mediums apparitions 
+in the track table and select the top 25 of them  
+*/
 SELECT DISTINCT *
 FROM
 (SELECT R.NAME
