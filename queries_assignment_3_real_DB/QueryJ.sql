@@ -5,9 +5,9 @@
 	we check if it has female artists in it. If so we order its femals artists by counting the number of track they did with an over partition 
 	operator and select the first row.
 */
-SELECT NAME
+SELECT GENRE_NAME, NAME
 FROM(
-  SELECT AG.ID_GENRE, A.NAME AS NAME, COUNT(DISTINCT AT.ID_TRACK), ROW_NUMBER()OVER (PARTITION BY AG.ID_GENRE ORDER BY COUNT(DISTINCT AT.ID_TRACK) DESC) AS RN
+  SELECT AG.ID_GENRE AS GENRE_NAME, A.NAME AS NAME, COUNT(DISTINCT AT.ID_TRACK), ROW_NUMBER()OVER (PARTITION BY AG.ID_GENRE, A.ID_ARTIST, A.NAME ORDER BY COUNT(DISTINCT AT.ID_TRACK) DESC) AS RN
   FROM ARTIST A, ARTIST_TRACK AT, ARTIST_GENRE AG
   WHERE A.ID_ARTIST= AT.ID_ARTIST  AND A.GENDER='Female' AND A.ID_ARTIST=AG.ID_ARTIST AND AG.ID_GENRE IN (SELECT *
                                                                                                           FROM(
