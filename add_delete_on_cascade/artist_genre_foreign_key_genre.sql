@@ -1,0 +1,5 @@
+ALTER TABLE ARTIST_GENRE
+ADD CONSTRAINT a_g_foreign_key_genre
+   FOREIGN KEY (ID_Genre)
+   REFERENCES Genre (ID_Genre)
+   ON DELETE CASCADE;
