@@ -7,7 +7,7 @@ Select the genres that are not present in the result of the selection of genres 
 Select the genres that are not present in the result of the selection of genres that have group artist.
 Union the results of each of these subqueries.
 */
-                                        
+
 SELECT G.ID_GENRE
 FROM GENRE G
 WHERE G.ID_GENRE
@@ -24,7 +24,7 @@ WHERE G.ID_GENRE
 NOT IN
 (SELECT AG.ID_GENRE
 FROM ARTIST_GENRE AG, ARTIST A
-WHERE AG.ID_ARTIST = A.ID_ARTIST AND A.GENDER = 'Male');
+WHERE AG.ID_ARTIST = A.ID_ARTIST AND A.GENDER = 'Male')
 
 UNION 
 
@@ -34,4 +34,4 @@ WHERE G.ID_GENRE
 NOT IN
 (SELECT AG.ID_GENRE
 FROM ARTIST_GENRE AG, ARTIST A
-WHERE AG.ID_ARTIST = A.ID_ARTIST AND A.TYPE = 'Group')
+WHERE AG.ID_ARTIST = A.ID_ARTIST AND A.TYPE = 'Group');

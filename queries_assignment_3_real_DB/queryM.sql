@@ -16,9 +16,9 @@ ORDER BY COUNT(DISTINCT T.ID_TRACK) DESC
 SELECT *
 FROM(
 SELECT A.NAME AS NAME, COUNT(DISTINCT T.ID_TRACK)
-FROM DUMMY_ARTIST A, DUMMY_ARTIST_TRACK AT, DUMMY_TRACK T
+FROM ARTIST A, ARTIST_TRACK AT, TRACK T
 WHERE A.TYPE='Group' AND A.ID_ARTIST=AT.ID_ARTIST AND AT.ID_TRACK=T.ID_TRACK AND T.ID_MEDIUM IN (SELECT T2.ID_MEDIUM
-                                                                                                FROM DUMMY_ARTIST_TRACK AT2, DUMMY_TRACK T2
+                                                                                                FROM ARTIST_TRACK AT2, TRACK T2
                                                                                                 WHERE AT2.ID_TRACK=T2.ID_TRACK
                                                                                                 GROUP BY T2.ID_MEDIUM
                                                                                                 HAVING COUNT(DISTINCT AT2.ID_ARTIST)>=2)
