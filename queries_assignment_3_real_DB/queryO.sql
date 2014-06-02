@@ -5,6 +5,7 @@ For each release we count the number of medium they are associated to and we ord
 Then we inject this result table in a from of another query. In this outer query we check for all releases if 
 the count is equal to the max count of all releases.
 */
+
 SELECT RID
 FROM(
       SELECT R.ID_RELEASE AS RID, COUNT(DISTINCT M.ID_MEDIUM) AS COUNTM
@@ -21,3 +22,4 @@ WHERE COUNTM = (SELECT MAX(COUNTM)
                       ORDER BY COUNT(DISTINCT M.ID_MEDIUM) DESC
                       )
                 );
+

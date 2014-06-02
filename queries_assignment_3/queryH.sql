@@ -17,11 +17,11 @@ WHERE RN=1;*/
 
 
 SELECT A.NAME, M.ART_NAME, F.ART_NAME, G.ART_NAME
-FROM DUMMY_AREA A,
+FROM AREA A,
 (SELECT AREA_ID, ART_NAME
 FROM(
 SELECT AM.ID_AREA AS AREA_ID, AM.NAME AS ART_NAME, COUNT(DISTINCT ATM.ID_TRACK) AS TCOUNT, ROW_NUMBER()OVER (PARTITION BY AM.ID_AREA ORDER BY COUNT(DISTINCT ATM.ID_TRACK)DESC) AS RN
-FROM  ARTIST AM, ARTIST_TRACK ATM
+FROM  dummy_ARTIST AM, dummy_ARTIST_TRACK ATM
 WHERE AM.GENDER='Male' AND AM.ID_ARTIST=ATM.ID_ARTIST AND AM.ID_AREA IN(SELECT AR2.ID_AREA
                                                                          FROM AREA AR2, ARTIST A
                                                                           WHERE A.ID_AREA= AR2.ID_AREA
@@ -53,39 +53,3 @@ GROUP BY AM.ID_AREA,  AM.ID_ARTIST, AM.NAME
 )WHERE RN<=1) G
 WHERE A.ID_AREA=M.AREA_ID AND A.ID_AREA=G.AREA_ID AND A.ID_AREA=F.AREA_ID;
 
-
-SELECT AREA_NAME, ART_NAME, ART_TYPE
-FROM(
-SELECT AR.NAME AS AREA_NAME, A.NAME AS ART_NAME, A.GENDER AS ART_TYPE, COUNT(DISTINCT AT.ID_TRACK AS COUNT_TRACK, ROW_NUMBER()OVER (PARTITION BY AM.ID_AREA ORDER BY COUNT(DISTINCT AT.ID_TRACK)DESC) AS RN
-FROM ARTIST A, AREA AR, ARTIST_TRACK AT
-WHERE A.ID_AREA = AR.ID_AREA AND A.GENDER='Male' AND AT.ID_ARTIST=A.ID_ARTIST AND AR.ID_AREA IN(SELECT AR2.ID_AREA
-                                                                         FROM AREA AR2, ARTIST A
-                                                                          WHERE A.ID_AREA= AR2.ID_AREA
-                                                                          GROUP BY AR2.ID_AREA
-                                                                          HAVING COUNT(DISTINCT A.ID_ARTIST)>=30)
-GROUP BY AR.ID_AREA, AM.NAME
-)WHERE RN<=1
-UNION
-SELECT AREA_NAME, ART_NAME, ART_TYPE
-FROM(
-SELECT AR.NAME AS AREA_NAME, A.NAME AS ART_NAME, A.GENDER AS ART_TYPE, COUNT(DISTINCT AT.ID_TRACK AS COUNT_TRACK, ROW_NUMBER()OVER (PARTITION BY AM.ID_AREA ORDER BY COUNT(DISTINCT AT.ID_TRACK)DESC) AS RN
-FROM ARTIST A, AREA AR, ARTIST_TRACK AT
-WHERE A.ID_AREA = AR.ID_AREA AND A.GENDER='Female' AND AT.ID_ARITST=A.ID_ARTIST AND AR.ID_AREA IN(SELECT AR2.ID_AREA
-                                                                         FROM AREA AR2, ARTIST A
-                                                                          WHERE A.ID_AREA= AR2.ID_AREA
-                                                                          GROUP BY AR2.ID_AREA
-                                                                          HAVING COUNT(DISTINCT A.ID_ARTIST)>=30)
-GROUP BY AR.ID_AREA, AM.NAME
-)WHERE RN<=1
-UNION
-SELECT AREA_NAME, ART_NAME, ART_TYPE
-FROM(
-SELECT AR.NAME AS AREA_NAME, A.NAME AS ART_NAME, A.TYPE AS ART_TYPE, COUNT(DISTINCT AT.ID_TRACK AS COUNT_TRACK, ROW_NUMBER()OVER (PARTITION BY AM.ID_AREA ORDER BY COUNT(DISTINCT AT.ID_TRACK)DESC) AS RN
-FROM ARTIST A, AREA AR, ARTIST_TRACK AT
-WHERE A.ID_AREA = AR.ID_AREA AND A.TYPE='Group' AND AT.ID_ARTIST=A.ID_ARTIST AND AR.ID_AREA IN(SELECT AR2.ID_AREA
-                                                                         FROM AREA AR2, ARTIST A
-                                                                          WHERE A.ID_AREA= AR2.ID_AREA
-                                                                          GROUP BY AR2.ID_AREA
-                                                                          HAVING COUNT(DISTINCT A.ID_ARTIST)>=30)
-GROUP BY AR.ID_AREA, AM.NAME
-)WHERE RN<=1
