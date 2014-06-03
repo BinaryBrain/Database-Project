@@ -261,7 +261,7 @@
 	function renderTable(data, outputDiv, tableName) {
 		createInsertForm(tableName)
 
-		$("#insert-div").slideUp()
+		$("#insert-div").slideDown()
 
 		// Handling empty tables
 		if (data.length === 0) {
@@ -305,7 +305,7 @@
 			if(tableName) {
 				var idCol = "ID_"+tableName.toUpperCase()
 				name = data[i].NAME
-				html += '<tr class="result-links" href="#" data-table="'+tableName+'" data-id-col="'+idCol+'" data-id="'+data[i][idCol]+'" data-name="'+name+'">'
+				html += '<tr title="ID: '+data[i][idCol]+'" class="result-links" href="#" data-table="'+tableName+'" data-id-col="'+idCol+'" data-id="'+data[i][idCol]+'" data-name="'+name+'">'
 			} else {
 				html += "<tr>"
 			}
@@ -348,7 +348,7 @@
 		for(var i = 0, l = columns.length; i < l; i++) {
 			html += '<div class="form-group">'
 			html += '<label class="sr-only" for="search-input">'+ columns[i] +'</label>'
-			html += '<input type="text" placeholder="'+ columns[i] +'" id="insert-form-'+ columns[i] +'" class="form-control" data-column-name="'+ columns[i] +'">'
+			html += '<input ' + ((columns[i].toLowerCase() === "name") ? "required" : "") + ' type="text" placeholder="'+ columns[i] +'" id="insert-form-'+ columns[i] +'" class="form-control" data-column-name="'+ columns[i] +'">'
 			html += '</div> '
 		}
 
