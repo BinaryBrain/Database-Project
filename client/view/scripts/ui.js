@@ -259,9 +259,10 @@
 		var idCol = s($(row).attr('data-id-col'))
 
 		$(row).slideUp();
-		alert("PLEASE UNCOMMENT ME!\nDELETE FROM " + table + " WHERE " + idCol + " = '" + id + "'")
-		// TODO Uncomment
-		//sendSQLRequest("DELET FROM " + table + " WHERE " + idCol + " = '" + id + "'")
+		var SQLreq = "DELETE FROM " + table + " WHERE " + idCol + " = '" + id + "'"
+		sendSQLRequest(SQLreq, function (data) {
+			hideAjaxLoader()
+		})
 	})
 
 	$('.tabs a').click(function (e) {
@@ -285,23 +286,28 @@
 		var table = s($("#insert-form").attr('data-table-name'))
 		var keys = []
 		var values = []
-		
-		$("#insert-form input").each(function () {
-			keys.push($(this).attr('data-column-name'))
-			values.push(s($(this).val()))
+		var idCol = "ID_"+table.toUpperCase()
+
+		sendSQLRequest("SELECT MAX("+idCol+") AS ID FROM "+table, function (data) {
+			var id;
+			id = data[0].ID+1
+
+			$("#insert-form #insert-form-"+idCol).val(id)
+			
+			$("#insert-form input").each(function () {
+				keys.push($(this).attr('data-column-name'))
+				values.push(s($(this).val()))
+			})
+
+			values = values.map(function (value) {
+				return (value === '') ? "null" : "'"+ value +"'"
+			})
+			
+			var SQLReq = "INSERT INTO "+ table + '( '+ keys.join(', ') +' ) VALUES ( ' + values.join(', ') + ' )';
+			sendSQLRequest(SQLReq, function (data) {
+				hideAjaxLoader()
+			});
 		})
-
-		console.log(values)
-
-		values = values.map(function (value) {
-			return (value === '') ? "null" : "'"+ value +"'"
-		})
-
-		console.log(values)
-		
-		alert("PLEASE UNCOMMENT ME!\nINSERT INTO "+ table + '( '+ keys.join(', ') +' ) VALUES ( ' + values.join(', ') + ' )')
-		// TODO Uncomment
-		//sendSQLRequest("INSERT INTO "+ table + '( '+ keys.join(', ') +' ) VALUES ( ' + values.join(', ') + ' )')
 	})
 
 	function sendSQLRequest(request, cb) {
@@ -473,7 +479,6 @@
 				}
 
 				$(tabs).html(htmlTabs)
-				console.log($(divs), htmlDivs)
 				$(divs).html(htmlDivs)
 			} else {
 				debug.write("Warning: trying to create one tab.")
