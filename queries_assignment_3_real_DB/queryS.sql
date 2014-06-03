@@ -7,34 +7,17 @@ First we select the recording that are on more than 3 mediums. Then for each art
 that is in this subset(we have this information by using the precedent table in the from of this new query) we order 
 them by the count of the medium. Then we choose the 10 first recording with the highest number of medium for each artist.
 */
-explain plan for
 
-SELECT ART_ID, COUNTM
+
+SELECT ART_ID, AVG(COUNTM)
 FROM(
   SELECT AT.ID_ARTIST AS ART_ID,  R.NAME AS RECORD_NAME, COUNT(DISTINCT T.ID_MEDIUM) AS COUNTM
-  FROM ARTIST_TRACK AT, RECORDING R, TRACK T
-  WHERE T.ID_RECORDING=R.ID_RECORDING  AND AT.ID_TRACK=T.ID_TRACK ;                                                 
+  FROM DUMMY_ARTIST_TRACK AT, DUMMY_RECORDING R, DUMMY_TRACK T
+  WHERE T.ID_RECORDING=R.ID_RECORDING  AND AT.ID_TRACK=T.ID_TRACK                                               
   GROUP BY AT.ID_ARTIST, R.NAME
-  HAVING COUNT(DISTINCT T.ID_MEDIUM)>=100;
-)GROUP BY ART_ID;
-SELECT * FROM TABLE(dbms_xplan.display);
-
-
-EXPLAIN PLAN FOR
-SELECT ART_ID, AVG(SUMM)
-FROM(
-SELECT ART_ID, R.NAME AS RECORD_NAME, SUM(COUNTM) AS SUMM
-FROM(
-  SELECT AT.ID_ARTIST ART_ID, T.ID_RECORDING AS RID, COUNT(DISTINCT T.ID_MEDIUM) AS COUNTM
-  FROM TRACK T, ARTIST_TRACK AT
-  WHERE AT.ID_TRACK= T.ID_TRACK                                                
-  GROUP BY AT.ID_ARTIST, T.ID_RECORDING
-)A, RECORDING R
-
-WHERE R.ID_RECORDING=A.RID
-GROUP BY ART_ID, R.NAME
-HAVING SUM(COUNTM) >=100
+  HAVING COUNT(DISTINCT T.ID_MEDIUM)>=100
 )GROUP BY ART_ID
 HAVING COUNT(RECORD_NAME)>=10;
 
-SELECT * FROM TABLE(dbms_xplan.display);
+
+

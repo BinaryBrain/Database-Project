@@ -8,18 +8,15 @@ the count is equal to the max count of all releases.
 
 SELECT RID
 FROM(
-      SELECT R.ID_RELEASE AS RID, COUNT(DISTINCT M.ID_MEDIUM) AS COUNTM
-      FROM RELEASE R, MEDIUM M
-      WHERE R.ID_RELEASE = M.ID_RELEASE
-      GROUP BY R.ID_RELEASE
+      SELECT M.ID_RELEASE AS RID, COUNT(DISTINCT M.ID_MEDIUM) AS COUNTM
+      FROM  MEDIUM M
+      GROUP BY M.ID_RELEASE
       ORDER BY COUNT(DISTINCT M.ID_MEDIUM) DESC)
 WHERE COUNTM = (SELECT MAX(COUNTM)
                 FROM (
                       SELECT COUNT(DISTINCT M.ID_MEDIUM) AS COUNTM
-                      FROM RELEASE R, MEDIUM M
-                      WHERE R.ID_RELEASE = M.ID_RELEASE
-                      GROUP BY R.ID_RELEASE
+                      FROM  MEDIUM M
+                      GROUP BY M.ID_RELEASE
                       ORDER BY COUNT(DISTINCT M.ID_MEDIUM) DESC
                       )
                 );
-
