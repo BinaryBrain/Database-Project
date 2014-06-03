@@ -74,7 +74,6 @@ For instance, if you search an artist called "Flume", the response sent to the c
 
 The client is a web app. So, to access it, you must first, run the java server, and then, access `http://localhost:7123/`.
 
-
 ### How to Use the Interface
 
 The interface is pretty simple and user-friendly.
@@ -109,3 +108,11 @@ To delete a data, just click on the red cross on the right of the row.
 ### Fullscreen mode
 
 Above the results, on the right, a fullscreen button can be clicked to display results on a bigger view. This is pretty practical when the table has a lot of row.
+
+### Technical details
+
+When a button is clicked, when a search is done or when a row is clicked, the same function is called to render the table. This function will execute an `AJAX` request to the server and get a JSON containing the result. The result will then be transformed to a `HTML` table.
+
+Note that technical informations like references to other SQL tables will be hidden to the user.
+
+When errors occurs, there are logged in the `Debug Console` at the bottom of the page. This is useful is you're disconnected from the EPFL network for instance.
