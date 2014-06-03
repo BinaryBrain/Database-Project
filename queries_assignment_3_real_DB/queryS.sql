@@ -8,16 +8,15 @@ that is in this subset(we have this information by using the precedent table in 
 them by the count of the medium. Then we choose the 10 first recording with the highest number of medium for each artist.
 */
 explain plan for
-SELECT ART_ID, AVG(COUNTM)
+
+SELECT ART_ID, COUNTM
 FROM(
   SELECT AT.ID_ARTIST AS ART_ID,  R.NAME AS RECORD_NAME, COUNT(DISTINCT T.ID_MEDIUM) AS COUNTM
-  FROM ARTIST_TRACK AT, TRACK T, RECORDING R
-  WHERE T.ID_RECORDING=R.ID_RECORDING  AND AT.ID_TRACK=T.ID_TRACK                                                  
+  FROM ARTIST_TRACK AT, RECORDING R, TRACK T
+  WHERE T.ID_RECORDING=R.ID_RECORDING  AND AT.ID_TRACK=T.ID_TRACK ;                                                 
   GROUP BY AT.ID_ARTIST, R.NAME
-  HAVING COUNT(DISTINCT T.ID_MEDIUM)>=2
-)GROUP BY ART_ID
-HAVING COUNT(RECORD_NAME)>=2;
-
+  HAVING COUNT(DISTINCT T.ID_MEDIUM)>=100;
+)GROUP BY ART_ID;
 SELECT * FROM TABLE(dbms_xplan.display);
 
 
