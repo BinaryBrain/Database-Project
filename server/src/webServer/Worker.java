@@ -92,12 +92,21 @@ public class Worker extends Thread {
 			if(path.equals("/do-sql")) {
 				// TODO Sanitize and Execute SQL request 
 				String sql = parameters.get("sql");
-				System.out.println("Executing: " + sql);
+				String isSelectStr = parameters.get("is_select");
+				boolean isSelect = false;
+				
+				if(isSelectStr == null) {
+					System.err.println("Warning: GET parameter is_select is not defined");
+				}
+				
+				if(isSelectStr.equals("true")) {
+					isSelect = true;
+				}
 				
 				try {
 					Database db = Database.getInstance();
 					
-					String json = db.executeQuery(sql);
+					String json = db.executeQuery(sql, isSelect);
 					sendHeaders(res, "application/json", "200 OK");
 					
 					PrintWriter writer = new PrintWriter(new OutputStreamWriter(res, StandardCharsets.UTF_8), true);

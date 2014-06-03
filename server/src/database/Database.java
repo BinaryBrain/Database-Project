@@ -50,7 +50,7 @@ public class Database {
 	
 	// TODO Return stuff
 	@SuppressWarnings("finally")
-	public synchronized String executeQuery(String sqlQuery) throws SQLException {
+	public synchronized String executeQuery(String sqlQuery, boolean isSelect) throws SQLException {
 		System.out.println("Executing: "+sqlQuery);
 		stmt = conn.createStatement();
 		String sql;
@@ -59,71 +59,76 @@ public class Database {
 		String json = "{";
 		
 		try {
-			ResultSet rs = stmt.executeQuery(sql);
-			ResultSetMetaData rsmd = rs.getMetaData();
-			
-			int columnCount = rsmd.getColumnCount();
-			
-			Map<String, String> columnNames = new HashMap<String, String>();
-			for (int i = 0; i < columnCount; i++) {
-				columnNames.put(rsmd.getColumnName(i+1), rsmd.getColumnClassName(i+1));
-			}
-			
-			System.out.println("Extracting...");
-			
-			json += "\"status\": \"OK\","+
-			"\"data\": [";
-			
-			boolean firstEntry = true;
-			// Extract data from result set
-			while (rs.next()) {
-				// Retrieve by column name
-				if(!firstEntry) {
-					json += ", ";
-				} else {
-					firstEntry = false;
+			if(!isSelect) {
+				stmt.executeUpdate(sql);
+				json += "\"status\": \"OK\"," + "\"data\": {}";
+			} else {
+				ResultSet rs = stmt.executeQuery(sql);
+				ResultSetMetaData rsmd = rs.getMetaData();
+				
+				int columnCount = rsmd.getColumnCount();
+				
+				Map<String, String> columnNames = new HashMap<String, String>();
+				for (int i = 0; i < columnCount; i++) {
+					columnNames.put(rsmd.getColumnName(i+1), rsmd.getColumnClassName(i+1));
 				}
 				
-				json += "{";
+				System.out.println("Extracting...");
 				
-				boolean firstCol = true;
+				json += "\"status\": \"OK\","+
+				"\"data\": [";
 				
-				for(Entry<String, String> column : columnNames.entrySet()) {
-				    String colName = column.getKey();
-				    String type = column.getValue();
-				    
-				    if(!firstCol) {
+				boolean firstEntry = true;
+				// Extract data from result set
+				while (rs.next()) {
+					// Retrieve by column name
+					if(!firstEntry) {
 						json += ", ";
 					} else {
-						firstCol = false;
+						firstEntry = false;
 					}
-				    
-					try {
-						if (Class.forName(type).equals(BigDecimal.class)) {
-							int value = rs.getInt(colName);
-							json += "\""+s(colName)+"\": "+value;
-						} else if (Class.forName(type).equals(String.class)) {
-							String value = rs.getString(colName);
-							json += "\""+s(colName)+"\": \""+s(value)+"\"";
-							//System.out.println(key + " (String): " + str);
+					
+					json += "{";
+					
+					boolean firstCol = true;
+					
+					for(Entry<String, String> column : columnNames.entrySet()) {
+					    String colName = column.getKey();
+					    String type = column.getValue();
+					    
+					    if(!firstCol) {
+							json += ", ";
+						} else {
+							firstCol = false;
 						}
-					} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+					    
+						try {
+							if (Class.forName(type).equals(BigDecimal.class)) {
+								int value = rs.getInt(colName);
+								json += "\""+s(colName)+"\": "+value;
+							} else if (Class.forName(type).equals(String.class)) {
+								String value = rs.getString(colName);
+								json += "\""+s(colName)+"\": \""+s(value)+"\"";
+								//System.out.println(key + " (String): " + str);
+							}
+						} catch (ClassNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
+					
+					json += "}";
 				}
 				
-				json += "}";
+				json += "]";
+				
+				rs.close();
 			}
 			
-			json += "]";
-			
-			System.out.println("Done.");
-			
-			rs.close();
 			stmt.close();
-		} catch (SQLSyntaxErrorException e) {
-			System.out.println(e.getMessage());
+			System.out.println("Done.");
+		} catch (Exception e) {
+			e.printStackTrace();
 			json += "\"status\": \"Error\","+"\"error\": \""+s(e.getMessage().trim())+"\"";
 		} finally {
 			json += "}";

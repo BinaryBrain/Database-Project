@@ -177,7 +177,7 @@
 
 		destroyTabs()
 
-		sendSQLRequest(request, function (data) {
+		sendSQLRequest(request, true, function (data) {
 			renderTable(data, ".output", table)
 		})
 	})
@@ -193,7 +193,7 @@
 
 		destroyTabs()
 
-		sendSQLRequest(sqlReq, function (data) {
+		sendSQLRequest(sqlReq, true, function (data) {
 			renderTable(data, ".output", table)
 		})
 	})
@@ -239,12 +239,12 @@
 		if(tables.length > 1) {
 			createTabs(tables)
 			for(var i = 0; i < tables.length; i++) {
-				sendSQLRequest(requests[tables[i]], function (data, table) {
+				sendSQLRequest(requests[tables[i]], true, function (data, table) {
 					renderTable(data, ".output .table-"+table, table)
 				}, tables[i])
 			}
 		} else {
-			sendSQLRequest(requests[tables[0]], function (data) {
+			sendSQLRequest(requests[tables[0]], true, function (data) {
 				renderTable(data, ".output", tables[0])
 			})
 		}
@@ -260,7 +260,7 @@
 
 		$(row).slideUp();
 		var SQLreq = "DELETE FROM " + table + " WHERE " + idCol + " = '" + id + "'"
-		sendSQLRequest(SQLreq, function (data) {
+		sendSQLRequest(SQLreq, false, function (data) {
 			hideAjaxLoader()
 		})
 	})
@@ -288,7 +288,7 @@
 		var values = []
 		var idCol = "ID_"+table.toUpperCase()
 
-		sendSQLRequest("SELECT MAX("+idCol+") AS ID FROM "+table, function (data) {
+		sendSQLRequest("SELECT MAX("+idCol+") AS ID FROM "+table, true, function (data) {
 			var id;
 			id = data[0].ID+1
 
@@ -304,20 +304,21 @@
 			})
 			
 			var SQLReq = "INSERT INTO "+ table + '( '+ keys.join(', ') +' ) VALUES ( ' + values.join(', ') + ' )';
-			sendSQLRequest(SQLReq, function (data) {
+			sendSQLRequest(SQLReq, false, function (data) {
 				hideAjaxLoader()
 			});
 		})
 	})
 
-	function sendSQLRequest(request, cb) {
+	function sendSQLRequest(request, isSelect, cb) {
 		var cbArgs = Array.prototype.slice.call(arguments)
 		cbArgs.splice(0, 2)
 
 		debug.write('Sending request: ' + request)
 		
 		showAjaxLoader()
-		$.getJSON("do-sql", { sql: request }, function(res) {
+
+		$.getJSON("do-sql", { sql: request, is_select: ((isSelect) ? "true" : "false") }, function(res) {
 			hideAjaxLoader()
 			if(res.status === "OK") {
 				cbArgs.unshift(res.data)
