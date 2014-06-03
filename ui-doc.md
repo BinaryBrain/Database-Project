@@ -72,14 +72,40 @@ For instance, if you search an artist called "Flume", the response sent to the c
 
 ## Client Side
 
+The client is a web app. So, to access it, you must first, run the java server, and then, access `http://localhost:7123/`.
+
+
 ### How to Use the Interface
 
-### Pre-written Requests
+The interface is pretty simple and user-friendly.
+
+### Pre-written Queries
+
+Pre-written queries are easily runnable by clicking on buttons on the left of the interface.
+Once a button is clicked, the corresponding SQL query is sent to the server and a JSON is returned as a response. This response will be show as a table in the center of the user interface.
 
 ### Custom Search
 
+The custom search allows you to search things with a case-insensitive keyword. For instance, if you search `beetroots`, the result `The Bloody Beetroots` will appear.
+The request behind it is pretty simple: `SELECT * FROM artist WHERE LOWER(name) LIKE lower('%beetroots%')`.
+Note that characters like `%` (percent), `_` (underscore) and `'` (single quote) are escaped.
+
 ### Clicable Results
+
+When a non-empty result is displayed, each row can be clicked to show more informations about the choosen result.
+When the row is clicked, some tabs will appears to display new results.
 
 ### Insertion
 
+For each table displayed, an insertion form will appear. This allows you to add some more data in the database.
+If a field is left empty, the value will be `null`.
+
+Note that the line will not directly appears in the already displayed table for technical reason (the ID has to be defined by the database so the row can be clicable).
+
 ### Deletion
+
+To delete a data, just click on the red cross on the right of the row.
+
+### Fullscreen mode
+
+Above the results, on the right, a fullscreen button can be clicked to display results on a bigger view. This is pretty practical when the table has a lot of row.
