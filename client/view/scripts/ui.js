@@ -114,7 +114,8 @@
 		'recording',
 		'release'
 	]
-		var structure = {
+
+	var structure = {
 		"area": [
 			'ID_AREA',
 			'NAME',
@@ -314,7 +315,7 @@
 
 	function sendSQLRequest(request, isSelect, cb) {
 		var cbArgs = Array.prototype.slice.call(arguments)
-		cbArgs.splice(0, 2)
+		cbArgs.splice(0, 3)
 
 		debug.write('Sending request: ' + request)
 		
@@ -416,10 +417,11 @@
 
 	function createInsertForm(table) {
 		var columns = structure[table]
-		var html = ""
 
 		$("#insert-form").attr('data-table-name', table)
 
+		var html = ""
+		
 		for(var i = 0, l = columns.length; i < l; i++) {
 			html += '<div class="form-group">'
 			html += '<label class="sr-only" for="search-input">'+ columns[i] +'</label>'
