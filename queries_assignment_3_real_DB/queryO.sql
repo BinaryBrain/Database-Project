@@ -6,11 +6,12 @@ Then we inject this result table in a from of another query. In this outer query
 the count is equal to the max count of all releases.
 */
 
-SELECT RID
+SELECT RID, RELEASE_NAME
 FROM(
-      SELECT M.ID_RELEASE AS RID, COUNT(DISTINCT M.ID_MEDIUM) AS COUNTM
-      FROM  MEDIUM M
-      GROUP BY M.ID_RELEASE
+      SELECT R.ID_RELEASE AS RID, R.NAME AS RELEASE_NAME, COUNT(DISTINCT M.ID_MEDIUM) AS COUNTM
+      FROM  MEDIUM M, RELEASE R
+	  WHERE M.ID_RELEASE=R.ID_RELEASE
+      GROUP BY R.ID_RELEASE, R.NAME
       ORDER BY COUNT(DISTINCT M.ID_MEDIUM) DESC)
 WHERE COUNTM = (SELECT MAX(COUNTM)
                 FROM (

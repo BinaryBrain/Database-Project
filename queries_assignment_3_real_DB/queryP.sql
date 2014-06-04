@@ -4,9 +4,9 @@ First we select the genre that contains a group which have 2 other genres. Then 
 is different from each other. Finally we select of the genre that match this condition by ordering them by their number
 of artist and select the top 1.
 */
-SELECT GNAME
+SELECT GENRE_ID, GNAME
 FROM (
-SELECT G.NAME AS GNAME
+SELECT G.NAME AS GNAME, G.ID_GENRE AS GENRE_ID
 FROM GENRE G, ARTIST_GENRE AG
 WHERE G.ID_GENRE=AG.ID_GENRE AND AG.ID_ARTIST IN
                         (SELECT AG.ID_ARTIST

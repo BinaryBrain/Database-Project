@@ -8,7 +8,7 @@ Select the genres that are not present in the result of the selection of genres 
 Union the results of each of these subqueries.
 */
 
-SELECT G.ID_GENRE
+SELECT G.ID_GENRE, G.NAME
 FROM GENRE G
 WHERE G.ID_GENRE
 NOT IN
@@ -18,7 +18,7 @@ WHERE AG.ID_ARTIST = A.ID_ARTIST AND A.GENDER = 'Female')
 
 UNION 
 
-SELECT G.ID_GENRE
+SELECT G.ID_GENRE, G.NAME
 FROM GENRE G
 WHERE G.ID_GENRE
 NOT IN
@@ -28,7 +28,7 @@ WHERE AG.ID_ARTIST = A.ID_ARTIST AND A.GENDER = 'Male')
 
 UNION 
 
-SELECT G.ID_GENRE
+SELECT G.ID_GENRE, G.NAME
 FROM GENRE G
 WHERE G.ID_GENRE
 NOT IN
