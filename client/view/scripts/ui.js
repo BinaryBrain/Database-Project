@@ -419,6 +419,7 @@
 		var columns = structure[table]
 
 		$("#insert-form").attr('data-table-name', table)
+		$("#insert-what").text(firstCap(table))
 
 		var html = ""
 		
