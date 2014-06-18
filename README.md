@@ -10,8 +10,9 @@ Another big challange was to create a lot of complex SQL queries.
 
 ![screenshot](screenshots/search.png?raw=true)
 
-Run
----
+_Oh! By the way, we had 100/100 points. =D_
+How to Run
+----------
 
 1) Make sure you're connected on the EPFL network
 
