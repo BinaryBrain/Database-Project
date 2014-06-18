@@ -6,7 +6,7 @@ Introduction
 
 The goal of this EPFL project was to manage a quite big database via a graphical interface. We acheive that by doing a web server to link the database with the user web interface.
 
-Another big challange was to create a lot of complex SQL queries.
+Another big challenge was to create a lot of complex SQL queries.
 
 ![screenshot](screenshots/search.png?raw=true)
 
