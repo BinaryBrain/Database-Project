@@ -4,13 +4,14 @@ Database-Project
 Introduction
 ------------
 
-The goal of this EPFL projet was to manage a quite big database via a graphical interface. We acheive that by doing a web server to link the database with the user web interface.
+The goal of this EPFL project was to manage a quite big database via a graphical interface. We acheive that by doing a web server to link the database with the user web interface.
 
 Another big challange was to create a lot of complex SQL queries.
 
 ![screenshot](screenshots/search.png?raw=true)
 
 _Oh! By the way, we had 100/100 points. =D_
+
 How to Run
 ----------
 
