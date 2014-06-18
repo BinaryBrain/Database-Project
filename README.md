@@ -10,6 +10,8 @@ Another big challenge was to create a lot of complex SQL queries.
 
 ![screenshot](screenshots/search.png?raw=true)
 
+If you want more information about this project, please take a look at [the full report](report_group3.pdf).
+
 _Oh! By the way, we had 100/100 points. =D_
 
 How to Run
